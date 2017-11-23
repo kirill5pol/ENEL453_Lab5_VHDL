@@ -57,14 +57,11 @@ architecture Behavioral of vga_module is
 
 -- Internal Signals ------------------------------------------------------------
     signal reset: std_logic;
-
     -- Clock divider signals:
     signal i_kHz, i_hHz, i_pixel_clk: std_logic;
-
     -- Sync module signals:
     signal vga_blank : std_logic;
     signal scan_line_x, scan_line_y: STD_LOGIC_VECTOR(10 downto 0);
-
     -- Box size signals:
     signal inc_box, dec_box: std_logic;
 begin

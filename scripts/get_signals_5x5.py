@@ -1,5 +1,12 @@
 from __future__ import print_function
 
+
+"""
+    Get signals 5x5: A script to generate the ROM for vhdl (need to remove some 
+    stuff and add other stuff)
+"""
+
+
 sig_0 = [['-', '0', '0', '0', '-'],
          ['0', '-', '-', '-', '0'],
          ['0', '-', '-', '-', '0'],
@@ -61,10 +68,19 @@ sig_9 = [['-', '9', '9', '9', '9'],
          ['9', '9', '9', '-', '-']]
 
 
+scale = 5 # Scale the image by this size new image will be (scale*5 by scale*5 pixels)
+
 
 for i, sig in enumerate([sig_0, sig_1, sig_2, sig_3, sig_4, sig_5, sig_6, sig_7, sig_8, sig_9]):
+    scaled_sig = []
+    for row in sig:
+        current_row = []
+        for character in row:
+            current_row += [character for _ in range(scale)]
+        scaled_sig += [current_row for _ in range(scale)]
+
     print('sig_{} = ('.format(i), end='')
-    for string in sig:
+    for string in scaled_sig:
         print('("', end='')
         for character in string:
             if character == '-':
