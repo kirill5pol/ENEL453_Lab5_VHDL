@@ -41,14 +41,13 @@ architecture Behavioral of vga_module is
             hHz             : out STD_LOGIC
         );
     end component;
-
-    component bouncing_box is
+    component digits_box is
         Port (
             clk            : in  STD_LOGIC;
             reset          : in  STD_LOGIC;
             scan_line_x    : in STD_LOGIC_VECTOR(10 downto 0);
             scan_line_y    : in STD_LOGIC_VECTOR(10 downto 0);
-            kHz            : in STD_LOGIC;
+            --kHz            : in STD_LOGIC;
             red            : out STD_LOGIC_VECTOR(3 downto 0);
             blue           : out STD_LOGIC_VECTOR(3 downto 0);
             green          : out std_logic_vector(3 downto 0)
@@ -67,17 +66,6 @@ architecture Behavioral of vga_module is
 begin
 
 -- Module Instantiation --------------------------------------------------------
-    VGA_SYNC: sync_signals_generator
-        Port map(
-                pixel_clk   => i_pixel_clk,
-                reset       => reset,
-                hor_sync    => hsync,
-                ver_sync    => vsync,
-                blank       => vga_blank,
-                scan_line_x => scan_line_x,
-                scan_line_y => scan_line_y
-        );
-
     DIVIDER: clock_divider
         Port map (
                 clk              => clk,
@@ -91,13 +79,23 @@ begin
                 ten_minutes_port => open,
                 hHz              => i_hHz
         );
-    BOX: bouncing_box
+    VGA_SYNC: sync_signals_generator
+        Port map(
+                pixel_clk   => i_pixel_clk,
+                reset       => reset,
+                hor_sync    => hsync,
+                ver_sync    => vsync,
+                blank       => vga_blank,
+                scan_line_x => scan_line_x,
+                scan_line_y => scan_line_y
+        );
+    BOX: digits_box
         Port map (
                 clk         => clk,
                 reset       => reset,
                 scan_line_x => scan_line_x,
                 scan_line_y => scan_line_y,
-                kHz         => i_kHz,
+                --kHz         => i_kHz,
                 red         => red,
                 blue        => blue,
                 green       => green

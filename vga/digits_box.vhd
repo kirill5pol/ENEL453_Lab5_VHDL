@@ -72,9 +72,8 @@ architecture Behavioral of digits_box is
     signal pos_start_y:                  STD_LOGIC_VECTOR(9 downto 0); -- All digits share these
     signal pos_end_y:                    STD_LOGIC_VECTOR(9 downto 0); -- All digits share these
 
-    signal sig_digit_tens: MAT;
-    signal sig_digit_ones: MAT;
-    signal sig_digit_tenths: MAT;
+    signal current_digit_value: STD_LOGIC_VECTOR(3 downto 0); -- Value of the digit you are currently in (or 0s)
+    signal output_digit: MAT;
 
     signal currently_sig_digit_tens:    STD_LOGIC := '0';
     signal currently_sig_digit_ones:    STD_LOGIC := '0';
@@ -131,75 +130,40 @@ begin
 
     -- TODO: refactor to only use CURRENT digit not all three!
     -- Get the values of the current digits
-        FIRST_DIGIT: process(digit_tens,sig_0,sig_1,sig_2,sig_3,sig_4,sig_5,sig_6,sig_7,sig_8,sig_9,sig_E)
+        current_digit_value <=
+                (digit_tens AND currently_sig_digit_tens) OR
+                (digit_ones AND currently_sig_digit_ones) OR
+                (digit_tenths AND currently_sig_digit_tenths) OR
+                (others => '0');
+
+        FIRST_DIGIT: process(current_digit_value,
+                             sig_0, sig_1, sig_2,
+                             sig_3, sig_4, sig_5,
+                             sig_6, sig_7, sig_8,
+                             sig_9, sig_E)
         begin
-            case digit_tens is
-                when "0000" => sig_digit_tens <= sig_0;
-                when "0001" => sig_digit_tens <= sig_1;
-                when "0010" => sig_digit_tens <= sig_2;
-                when "0011" => sig_digit_tens <= sig_3;
-                when "0100" => sig_digit_tens <= sig_4;
-                when "0101" => sig_digit_tens <= sig_5;
-                when "0110" => sig_digit_tens <= sig_6;
-                when "0111" => sig_digit_tens <= sig_7;
-                when "1000" => sig_digit_tens <= sig_8;
-                when "1001" => sig_digit_tens <= sig_9;
-                when others => sig_digit_tens <= sig_E;
-            end case;
-        end process;
-        SECOND_DIGIT: process(digit_ones,sig_0,sig_1,sig_2,sig_3,sig_4,sig_5,sig_6,sig_7,sig_8,sig_9,sig_E)
-        begin
-            case digit_tens is
-                when "0000" => digit_ones <= sig_0;
-                when "0001" => digit_ones <= sig_1;
-                when "0010" => digit_ones <= sig_2;
-                when "0011" => digit_ones <= sig_3;
-                when "0100" => digit_ones <= sig_4;
-                when "0101" => digit_ones <= sig_5;
-                when "0110" => digit_ones <= sig_6;
-                when "0111" => digit_ones <= sig_7;
-                when "1000" => digit_ones <= sig_8;
-                when "1001" => digit_ones <= sig_9;
-                when others => digit_ones <= sig_E;
-            end case;
-        end process;
-        THIRD_DIGIT: process(digit_tenths,sig_0,sig_1,sig_2,sig_3,sig_4,sig_5,sig_6,sig_7,sig_8,sig_9,sig_E)
-        begin
-            case digit_tens is
-                when "0000" => sig_digit_tenths <= sig_0;
-                when "0001" => sig_digit_tenths <= sig_1;
-                when "0010" => sig_digit_tenths <= sig_2;
-                when "0011" => sig_digit_tenths <= sig_3;
-                when "0100" => sig_digit_tenths <= sig_4;
-                when "0101" => sig_digit_tenths <= sig_5;
-                when "0110" => sig_digit_tenths <= sig_6;
-                when "0111" => sig_digit_tenths <= sig_7;
-                when "1000" => sig_digit_tenths <= sig_8;
-                when "1001" => sig_digit_tenths <= sig_9;
-                when others => sig_digit_tenths <= sig_E;
+            case current_digit_value is
+                when "0000" => output_digit <= sig_0;
+                when "0001" => output_digit <= sig_1;
+                when "0010" => output_digit <= sig_2;
+                when "0011" => output_digit <= sig_3;
+                when "0100" => output_digit <= sig_4;
+                when "0101" => output_digit <= sig_5;
+                when "0110" => output_digit <= sig_6;
+                when "0111" => output_digit <= sig_7;
+                when "1000" => output_digit <= sig_8;
+                when "1001" => output_digit <= sig_9;
+                when others => output_digit <= sig_E;
             end case;
         end process;
 
     -- Select the color
-        pixel_color <= "111111111111"; -- TODO make this work...
-
-        pixel_color <= ( -- When it matches a pixel representing a digit
-                        current_sig_x_offset
-                        current_sig_y_offset
-                            (  
-                                box_color AND 
-                                initials(index_of_initials)
-                            ) OR 
-                            (
-                                "111111111111" AND 
-                                (NOT initials(index_of_initials)))
-                            ) 
-                  when  ((scan_line_x >= box_loc_x) and 
-                         (scan_line_y >= box_loc_y) and 
-                         (scan_line_x < box_loc_x+box_width) and 
-                         (scan_line_y < box_loc_y+box_width))
+        pixel_color <= output_digit(current_sig_x_offset, current_sig_y_offset)
+                  when  (currently_sig_digit_tens OR
+                         currently_sig_digit_ones OR
+                         currently_sig_digit_tenths)
                 else
-                         "111111111111"; -- represents WHITE
+                         "000000000000"; -- represents WHITE
 								
 red   <= pixel_color(11 downto 8);
 green <= pixel_color(7 downto 4);
