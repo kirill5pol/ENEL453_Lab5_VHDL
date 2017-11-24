@@ -59,22 +59,37 @@ architecture Behavioral of digits_box is
     signal pixel_color:     STD_LOGIC_VECTOR(11 downto 0);
 
     -- Offset from 0,0 for digits & scale factor
-    constant offset_x:      STD_LOGIC_VECTOR(9 downto 0) := "0000010000"; -- Offset 16 pixels
-    constant offset_y:      STD_LOGIC_VECTOR(9 downto 0) := "0000010000"; -- Offset 16 pixels
-    constant digit_size:    STD_LOGIC_VECTOR(9 downto 0) := "0000011001"; -- Digit size is 25x25 pixels
-    constant padding:       STD_LOGIC_VECTOR(9 downto 0) := "0000000100"; -- Padding is 4 pixels
-
-    signal pos_start_x_sig_digit_tens:   STD_LOGIC_VECTOR(9 downto 0);
-    signal pos_start_x_sig_digit_ones:   STD_LOGIC_VECTOR(9 downto 0);
-    signal pos_start_x_sig_digit_tenths: STD_LOGIC_VECTOR(9 downto 0);
-    signal pos_end_x_sig_digit_tens:     STD_LOGIC_VECTOR(9 downto 0);
-    signal pos_end_x_sig_digit_ones:     STD_LOGIC_VECTOR(9 downto 0);
-    signal pos_end_x_sig_digit_tenths:   STD_LOGIC_VECTOR(9 downto 0);
-    signal pos_start_y:                  STD_LOGIC_VECTOR(9 downto 0); -- All digits share these
-    signal pos_end_y:                    STD_LOGIC_VECTOR(9 downto 0); -- All digits share these
-
+    --constant offset_x:      STD_LOGIC_VECTOR(9 downto 0) := "0000010000"; -- Offset 16 pixels
+    --constant offset_y:      STD_LOGIC_VECTOR(9 downto 0) := "0000010000"; -- Offset 16 pixels
+    --constant digit_size:    STD_LOGIC_VECTOR(9 downto 0) := "0000011001"; -- Digit size is 25x25 pixels
+    --constant padding:       STD_LOGIC_VECTOR(9 downto 0) := "0000000100"; -- Padding is 4 pixels
+    
     signal current_digit_value: STD_LOGIC_VECTOR(3 downto 0); -- Value of the digit you are currently in (or 0s)
     signal output_digit: MAT;
+    --signal pos_start_x_sig_digit_tens:   STD_LOGIC_VECTOR(9 downto 0);
+    --signal pos_start_x_sig_digit_ones:   STD_LOGIC_VECTOR(9 downto 0);
+    --signal pos_start_x_sig_digit_tenths: STD_LOGIC_VECTOR(9 downto 0);
+    --signal pos_end_x_sig_digit_tens:     STD_LOGIC_VECTOR(9 downto 0);
+    --signal pos_end_x_sig_digit_ones:     STD_LOGIC_VECTOR(9 downto 0);
+    --signal pos_end_x_sig_digit_tenths:   STD_LOGIC_VECTOR(9 downto 0);
+    --signal pos_start_y:                  STD_LOGIC_VECTOR(9 downto 0); -- All digits share these
+    --signal pos_end_y:                    STD_LOGIC_VECTOR(9 downto 0); -- All digits share these
+
+    --signal currently_sig_digit_tens:    STD_LOGIC := '0';
+    --signal currently_sig_digit_ones:    STD_LOGIC := '0';
+    --signal currently_sig_digit_tenths:  STD_LOGIC := '0';
+    --signal pos_start_x_current_sig: STD_LOGIC_VECTOR(9 downto 0); -- The pos_start_x_sig for the current digit
+    --signal current_sig_x_offset: integer := 0; -- Used for indexing the current sig_digit MAT
+    --signal current_sig_y_offset: integer := 0;
+
+    constant pos_start_x_sig_digit_tens:   STD_LOGIC_VECTOR(9 downto 0) := "0000010000"; -- 16
+    constant pos_start_x_sig_digit_ones:   STD_LOGIC_VECTOR(9 downto 0) := "0000101101"; -- 45
+    constant pos_start_x_sig_digit_tenths: STD_LOGIC_VECTOR(9 downto 0) := "0001001010"; -- 74
+    constant pos_end_x_sig_digit_tens:     STD_LOGIC_VECTOR(9 downto 0) := "0000101001"; -- 41
+    constant pos_end_x_sig_digit_ones:     STD_LOGIC_VECTOR(9 downto 0) := "0001000110"; -- 70
+    constant pos_end_x_sig_digit_tenths:   STD_LOGIC_VECTOR(9 downto 0) := "0001100011"; -- 99
+    constant pos_start_y:                  STD_LOGIC_VECTOR(9 downto 0) := "0000010000"; -- 16 -- All digits share these
+    constant pos_end_y:                    STD_LOGIC_VECTOR(9 downto 0) := "0000101001"; -- 41 -- All digits share these
 
     signal currently_sig_digit_tens:    STD_LOGIC := '0';
     signal currently_sig_digit_ones:    STD_LOGIC := '0';
@@ -82,21 +97,22 @@ architecture Behavioral of digits_box is
     signal pos_start_x_current_sig: STD_LOGIC_VECTOR(9 downto 0); -- The pos_start_x_sig for the current digit
     signal current_sig_x_offset: integer := 0; -- Used for indexing the current sig_digit MAT
     signal current_sig_y_offset: integer := 0;
+
 begin
 
 
 -- Internal processes  ---------------------------------------------------------
     -- Get the start & end positions for all of the digit boxes
         -- Possibly hard code these:
-        pos_start_x_sig_digit_tens   <= offset_x;
-        pos_start_x_sig_digit_ones   <= offset_x + digit_size + padding;
-        pos_start_x_sig_digit_tenths <= offset_x + digit_size + padding + digit_size + padding;
-        pos_end_x_sig_digit_tens     <= offset_x + digit_size;
-        pos_end_x_sig_digit_ones     <= offset_x + digit_size + padding + digit_size;
-        pos_end_x_sig_digit_tenths   <= offset_x + digit_size + padding + digit_size + padding + digit_size;
-        -- All digits share these y positions
-        pos_start_y                  <= offset_y;
-        pos_end_y                    <= offset_y + digit_size;
+        --pos_start_x_sig_digit_tens   <= offset_x;
+        --pos_start_x_sig_digit_ones   <= offset_x + digit_size + padding;
+        --pos_start_x_sig_digit_tenths <= offset_x + digit_size + padding + digit_size + padding;
+        --pos_end_x_sig_digit_tens     <= offset_x + digit_size;
+        --pos_end_x_sig_digit_ones     <= offset_x + digit_size + padding + digit_size;
+        --pos_end_x_sig_digit_tenths   <= offset_x + digit_size + padding + digit_size + padding + digit_size;
+        ---- All digits share these y positions
+        --pos_start_y                  <= offset_y;
+        --pos_end_y                    <= offset_y + digit_size;
 
     -- Figure out which digit (if any is currently being shown)
         currently_sig_digit_tens <= '1'
@@ -120,7 +136,7 @@ begin
 
     -- Get the x & y offset INSIDE a digit
         -- The starting pos of the digit you are currently in (or 0s if not in digit)
-        pos_start_x_current_sig <= pos_start_x_sig_digit_tens when (currently_sig_digit_tens = '1') 
+        pos_start_x_current_sig <=   pos_start_x_sig_digit_tens when (currently_sig_digit_tens = '1') 
                                 else pos_start_x_sig_digit_ones when (currently_sig_digit_ones = '1') 
                                 else pos_start_x_sig_digit_tenths when (currently_sig_digit_tenths = '1') 
                                 else (others => '0');
@@ -128,13 +144,14 @@ begin
         current_sig_x_offset <= CONV_INTEGER(UNSIGNED(scan_line_x - pos_start_x_current_sig));
         current_sig_y_offset <= CONV_INTEGER(UNSIGNED(scan_line_y - pos_start_y));
 
+    -- TODO: refactor to only use CURRENT digit not all three!
     -- Get the values of the current digits
         current_digit_value <=
-                digit_tens when (currently_sig_digit_tens = '1') 
-                else digit_ones when (currently_sig_digit_ones = '1') 
-                else digit_tenths when (currently_sig_digit_tenths = '1') 
+                digit_tens when (currently_sig_digit_tens = '1')
+                else digit_ones when (currently_sig_digit_ones = '1')
+                else digit_tenths when (currently_sig_digit_tenths = '1')
                 else (others => '0');
-
+ 
         FIRST_DIGIT: process(current_digit_value)
         begin
             case current_digit_value is
@@ -154,8 +171,8 @@ begin
 
     -- Select the color
         pixel_color <= (others => '1')
-                  when  ((output_digit(current_sig_x_offset)(current_sig_y_offset) = '1') OR
-                         (currently_sig_digit_tens = '1') OR
+                  when  ((output_digit(current_sig_x_offset)(current_sig_y_offset) = '1')) AND 
+                         ((currently_sig_digit_tens = '1') OR
                          (currently_sig_digit_ones = '1') OR
                          (currently_sig_digit_tenths = '1'))
                 else
