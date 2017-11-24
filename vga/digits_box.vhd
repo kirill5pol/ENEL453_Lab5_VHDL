@@ -103,45 +103,39 @@ begin
                 when (scan_line_x >= pos_start_x_sig_digit_tens) AND
                      (scan_line_x <  pos_end_x_sig_digit_tens) AND
                      (scan_line_y >= pos_start_y) AND
-                     (scan_line_y <  pos_end_y) AND
+                     (scan_line_y <  pos_end_y) 
                 else '0';
         currently_sig_digit_ones <= '1'
                 when (scan_line_x >= pos_start_x_sig_digit_ones) AND
                      (scan_line_x <  pos_end_x_sig_digit_ones) AND
                      (scan_line_y >= pos_start_y) AND
-                     (scan_line_y <  pos_end_y) AND
+                     (scan_line_y <  pos_end_y) 
                 else '0';
         currently_sig_digit_tenths <= '1'
                 when (scan_line_x >= pos_start_x_sig_digit_tenths) AND
                      (scan_line_x <  pos_end_x_sig_digit_tenths) AND
                      (scan_line_y >= pos_start_y) AND
-                     (scan_line_y <  pos_end_y) AND
+                     (scan_line_y <  pos_end_y) 
                 else '0';
 
     -- Get the x & y offset INSIDE a digit
         -- The starting pos of the digit you are currently in (or 0s if not in digit)
-        pos_start_x_current_sig <=
-                (pos_start_x_sig_digit_tens AND currently_sig_digit_tens) OR
-                (pos_start_x_sig_digit_ones AND currently_sig_digit_ones) OR
-                (pos_start_x_sig_digit_tenths AND currently_sig_digit_tenths) OR
-                (others => '0');
+        pos_start_x_current_sig <= pos_start_x_sig_digit_tens when (currently_sig_digit_tens = '1') 
+                                else pos_start_x_sig_digit_ones when (currently_sig_digit_ones = '1') 
+                                else pos_start_x_sig_digit_tenths when (currently_sig_digit_tenths = '1') 
+                                else (others => '0');
         -- Determine how many pixels from the start of the current digit the scan lines are
-        current_sig_x_offset <= TO_INTEGER(UNSIGNED(scan_line_x - pos_start_x_current_sig));
-        current_sig_y_offset <= TO_INTEGER(UNSIGNED(scan_line_y - pos_start_y));
+        current_sig_x_offset <= CONV_INTEGER(UNSIGNED(scan_line_x - pos_start_x_current_sig));
+        current_sig_y_offset <= CONV_INTEGER(UNSIGNED(scan_line_y - pos_start_y));
 
-    -- TODO: refactor to only use CURRENT digit not all three!
     -- Get the values of the current digits
         current_digit_value <=
-                (digit_tens AND currently_sig_digit_tens) OR
-                (digit_ones AND currently_sig_digit_ones) OR
-                (digit_tenths AND currently_sig_digit_tenths) OR
-                (others => '0');
+                digit_tens when (currently_sig_digit_tens = '1') 
+                else digit_ones when (currently_sig_digit_ones = '1') 
+                else digit_tenths when (currently_sig_digit_tenths = '1') 
+                else (others => '0');
 
-        FIRST_DIGIT: process(current_digit_value,
-                             sig_0, sig_1, sig_2,
-                             sig_3, sig_4, sig_5,
-                             sig_6, sig_7, sig_8,
-                             sig_9, sig_E)
+        FIRST_DIGIT: process(current_digit_value)
         begin
             case current_digit_value is
                 when "0000" => output_digit <= sig_0;
@@ -159,10 +153,11 @@ begin
         end process;
 
     -- Select the color
-        pixel_color <= output_digit(current_sig_x_offset, current_sig_y_offset)
-                  when  (currently_sig_digit_tens OR
-                         currently_sig_digit_ones OR
-                         currently_sig_digit_tenths)
+        pixel_color <= (others => '1')
+                  when  ((output_digit(current_sig_x_offset)(current_sig_y_offset) = '1') OR
+                         (currently_sig_digit_tens = '1') OR
+                         (currently_sig_digit_ones = '1') OR
+                         (currently_sig_digit_tenths = '1'))
                 else
                          "000000000000"; -- represents WHITE
                                 
@@ -172,4 +167,3 @@ blue  <= pixel_color(3 downto 0);
 
 
 end Behavioral;
-
