@@ -11,7 +11,7 @@ entity vga_module is
             blue        : out STD_LOGIC_VECTOR(3 downto 0);
             hsync       : out STD_LOGIC;
             vsync       : out STD_LOGIC
-     );
+    );
 end vga_module;
 
 architecture Behavioral of vga_module is
@@ -43,14 +43,17 @@ architecture Behavioral of vga_module is
     end component;
     component digits_box is
         Port (
-            clk            : in  STD_LOGIC;
-            reset          : in  STD_LOGIC;
-            scan_line_x    : in STD_LOGIC_VECTOR(10 downto 0);
-            scan_line_y    : in STD_LOGIC_VECTOR(10 downto 0);
-            --kHz            : in STD_LOGIC;
-            red            : out STD_LOGIC_VECTOR(3 downto 0);
-            blue           : out STD_LOGIC_VECTOR(3 downto 0);
-            green          : out std_logic_vector(3 downto 0)
+            clk:          in  STD_LOGIC;
+            reset:        in  STD_LOGIC;
+            digit_tens:   in  STD_LOGIC_VECTOR(3 downto 0);
+            digit_ones:   in  STD_LOGIC_VECTOR(3 downto 0);
+            digit_tenths: in  STD_LOGIC_VECTOR(3 downto 0);
+            scan_line_x:  in  STD_LOGIC_VECTOR(10 downto 0);
+            scan_line_y:  in  STD_LOGIC_VECTOR(10 downto 0);
+            --kHz:          in  STD_LOGIC;
+            red:          out STD_LOGIC_VECTOR(3 downto 0);
+            blue:         out STD_LOGIC_VECTOR(3 downto 0);
+            green:        out std_logic_vector(3 downto 0)
         );
     end component;
 
@@ -63,8 +66,12 @@ architecture Behavioral of vga_module is
     signal scan_line_x, scan_line_y: STD_LOGIC_VECTOR(10 downto 0);
     -- Box size signals:
     signal inc_box, dec_box: std_logic;
-begin
 
+    signal digit_tens: STD_LOGIC_VECTOR(3 downto 0) := "0110";
+    signal digit_ones: STD_LOGIC_VECTOR(3 downto 0) := "0110";
+    signal digit_tenths: STD_LOGIC_VECTOR(3 downto 0) := "0110";
+
+begin
 -- Module Instantiation --------------------------------------------------------
     DIVIDER: clock_divider
         Port map (
@@ -93,6 +100,9 @@ begin
         Port map (
                 clk         => clk,
                 reset       => reset,
+                digit_tens => digit_tens,
+                digit_ones => digit_ones,
+                digit_tenths => digit_tenths,
                 scan_line_x => scan_line_x,
                 scan_line_y => scan_line_y,
                 --kHz         => i_kHz,
@@ -100,10 +110,6 @@ begin
                 blue        => blue,
                 green       => green
         );
-
-
--- Internal Processes ----------------------------------------------------------
-
 
 end Behavioral;
 

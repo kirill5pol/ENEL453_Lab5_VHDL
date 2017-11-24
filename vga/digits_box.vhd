@@ -18,20 +18,21 @@ use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity digits_box is
-    Port ( 	clk:          in  STD_LOGIC;
-			reset:        in  STD_LOGIC;
+    Port (
+            clk:          in  STD_LOGIC;
+            reset:        in  STD_LOGIC;
 
             digit_tens:   in  STD_LOGIC_VECTOR(3 downto 0); -- Max number is 9 so we need 4 bits
             digit_ones:   in  STD_LOGIC_VECTOR(3 downto 0); -- Max number is 9 so we need 4 bits
             digit_tenths: in  STD_LOGIC_VECTOR(3 downto 0); -- Max number is 9 so we need 4 bits
 
-			scan_line_x:  in  STD_LOGIC_VECTOR(10 downto 0);
-			scan_line_y:  in  STD_LOGIC_VECTOR(10 downto 0);
-			--kHz:          in  STD_LOGIC;
-			red:          out STD_LOGIC_VECTOR(3 downto 0);
-			blue:         out STD_LOGIC_VECTOR(3 downto 0);
-			green:        out std_logic_vector(3 downto 0)
-		  );
+            scan_line_x:  in  STD_LOGIC_VECTOR(10 downto 0);
+            scan_line_y:  in  STD_LOGIC_VECTOR(10 downto 0);
+            --kHz:          in  STD_LOGIC;
+            red:          out STD_LOGIC_VECTOR(3 downto 0);
+            blue:         out STD_LOGIC_VECTOR(3 downto 0);
+            green:        out std_logic_vector(3 downto 0)
+          );
 end digits_box;
 
 architecture Behavioral of digits_box is
@@ -164,7 +165,7 @@ begin
                          currently_sig_digit_tenths)
                 else
                          "000000000000"; -- represents WHITE
-								
+                                
 red   <= pixel_color(11 downto 8);
 green <= pixel_color(7 downto 4);
 blue  <= pixel_color(3 downto 0);
