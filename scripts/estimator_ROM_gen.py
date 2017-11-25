@@ -20,13 +20,42 @@ y_bin = vectorized_bin(y_int) # this should be 0 to 30
 addresses = x_bin
 values = y_bin
 
-string = 'type ROM is array (0 to {}) of STD_LOGIC_VECTOR({} downto 0);\n'.format(2**binary_width-1, binary_width-1)
-string += 'constant estimator_rom: ROM := ('
+
+
+rom_str = 'type ROM is array (0 to {}) of STD_LOGIC_VECTOR({} downto 0);\n'.format(2**binary_width-1, binary_width-1)
+rom_str += '    constant estimator_rom: ROM := ('
 for i, addr in enumerate(addresses):
-	string += '("{}"), '.format(values[i])
-string = string[:-2] + ');'
-print(string)
+	rom_str += '("{}"), '.format(values[i])
+rom_str = rom_str[:-2] + ');'
+
+code_string = 'library IEEE;\n\
+use IEEE.STD_LOGIC_1164.ALL;\n\
+use IEEE.STD_LOGIC_ARITH.ALL;\n\
+use IEEE.STD_LOGIC_UNSIGNED.ALL;\n\
+\n\
+entity estimator is\n\
+        generic (width: integer := {});\n\
+        Port (\n\
+                clk      : in  STD_LOGIC;\n\
+                reset    : in  STD_LOGIC;\n\
+                voltage  : in  STD_LOGIC_VECTOR(width-1 downto 0);\n\
+                distance : out STD_LOGIC_VECTOR(width-1 downto 0)\n\
+         );\n\
+end estimator;\n\
+\n\
+architecture Behavioral of estimator is\n\
+    {}\n\
+\n\
+begin\n\
+-- Internal processes ----------------------------------------------------------\n\
+    distance <= estimator_rom(CONV_INTEGER(UNSIGNED(voltage)));\n\
+\n\
+end Behavioral;\n\
+\n\
+'.format(binary_width, rom_str)
 
 
-
+filename = '../estimator/estimator.vhd'
+with open(filename, 'w') as f:
+	f.write(code_string)
 
