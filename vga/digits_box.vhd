@@ -38,7 +38,7 @@ end digits_box;
 architecture Behavioral of digits_box is
 
 -- Internal Signals  -----------------------------------------------------------
-    -- You have 3 digits + 1 decimal point -> 50 by 50 for each -> width 200, height 50
+    -- These are vertically flipped & rotated clockwise 90 degrees
     type MAT is array (24 downto 0) of std_logic_vector(24 downto 0);
     constant sig_0: MAT := (("0000011111111111111100000"), ("0000011111111111111100000"), ("0000011111111111111100000"), ("0000011111111111111100000"), ("0000011111111111111100000"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("0000011111111111111100000"), ("0000011111111111111100000"), ("0000011111111111111100000"), ("0000011111111111111100000"), ("0000011111111111111100000"));
     constant sig_1: MAT := (("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"));
@@ -57,30 +57,9 @@ architecture Behavioral of digits_box is
     constant box_loc_x_max: STD_LOGIC_VECTOR(9 downto 0) := "1001111111"; -- 640-1 -- 640 is 1010000000
     constant box_loc_y_max: STD_LOGIC_VECTOR(9 downto 0) := "0111011111"; -- 480-1 -- 480 is 0111100000
     signal pixel_color:     STD_LOGIC_VECTOR(11 downto 0);
-
-    -- Offset from 0,0 for digits & scale factor
-    --constant offset_x:      STD_LOGIC_VECTOR(9 downto 0) := "0000010000"; -- Offset 16 pixels
-    --constant offset_y:      STD_LOGIC_VECTOR(9 downto 0) := "0000010000"; -- Offset 16 pixels
-    --constant digit_size:    STD_LOGIC_VECTOR(9 downto 0) := "0000011001"; -- Digit size is 25x25 pixels
-    --constant padding:       STD_LOGIC_VECTOR(9 downto 0) := "0000000100"; -- Padding is 4 pixels
-    
+   
     signal current_digit_value: STD_LOGIC_VECTOR(3 downto 0); -- Value of the digit you are currently in (or 0s)
     signal output_digit: MAT;
-    --signal pos_start_x_sig_digit_tens:   STD_LOGIC_VECTOR(9 downto 0);
-    --signal pos_start_x_sig_digit_ones:   STD_LOGIC_VECTOR(9 downto 0);
-    --signal pos_start_x_sig_digit_tenths: STD_LOGIC_VECTOR(9 downto 0);
-    --signal pos_end_x_sig_digit_tens:     STD_LOGIC_VECTOR(9 downto 0);
-    --signal pos_end_x_sig_digit_ones:     STD_LOGIC_VECTOR(9 downto 0);
-    --signal pos_end_x_sig_digit_tenths:   STD_LOGIC_VECTOR(9 downto 0);
-    --signal pos_start_y:                  STD_LOGIC_VECTOR(9 downto 0); -- All digits share these
-    --signal pos_end_y:                    STD_LOGIC_VECTOR(9 downto 0); -- All digits share these
-
-    --signal currently_sig_digit_tens:    STD_LOGIC := '0';
-    --signal currently_sig_digit_ones:    STD_LOGIC := '0';
-    --signal currently_sig_digit_tenths:  STD_LOGIC := '0';
-    --signal pos_start_x_current_sig: STD_LOGIC_VECTOR(9 downto 0); -- The pos_start_x_sig for the current digit
-    --signal current_sig_x_offset: integer := 0; -- Used for indexing the current sig_digit MAT
-    --signal current_sig_y_offset: integer := 0;
 
     constant pos_start_x_sig_digit_tens:   STD_LOGIC_VECTOR(9 downto 0) := "0000010000"; -- 16
     constant pos_start_x_sig_digit_ones:   STD_LOGIC_VECTOR(9 downto 0) := "0000101101"; -- 45
@@ -94,7 +73,7 @@ architecture Behavioral of digits_box is
     signal currently_sig_digit_tens:    STD_LOGIC := '0';
     signal currently_sig_digit_ones:    STD_LOGIC := '0';
     signal currently_sig_digit_tenths:  STD_LOGIC := '0';
-    signal pos_start_x_current_sig: STD_LOGIC_VECTOR(9 downto 0); -- The pos_start_x_sig for the current digit
+    signal pos_start_x_current_sig:     STD_LOGIC_VECTOR(9 downto 0); -- The pos_start_x_sig for the current digit
     signal current_sig_x_offset: integer := 0; -- Used for indexing the current sig_digit MAT
     signal current_sig_y_offset: integer := 0;
 
@@ -102,18 +81,6 @@ begin
 
 
 -- Internal processes  ---------------------------------------------------------
-    -- Get the start & end positions for all of the digit boxes
-        -- Possibly hard code these:
-        --pos_start_x_sig_digit_tens   <= offset_x;
-        --pos_start_x_sig_digit_ones   <= offset_x + digit_size + padding;
-        --pos_start_x_sig_digit_tenths <= offset_x + digit_size + padding + digit_size + padding;
-        --pos_end_x_sig_digit_tens     <= offset_x + digit_size;
-        --pos_end_x_sig_digit_ones     <= offset_x + digit_size + padding + digit_size;
-        --pos_end_x_sig_digit_tenths   <= offset_x + digit_size + padding + digit_size + padding + digit_size;
-        ---- All digits share these y positions
-        --pos_start_y                  <= offset_y;
-        --pos_end_y                    <= offset_y + digit_size;
-
     -- Figure out which digit (if any is currently being shown)
         currently_sig_digit_tens <= '1'
                 when (scan_line_x >= pos_start_x_sig_digit_tens) AND

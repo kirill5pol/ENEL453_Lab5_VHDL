@@ -56,6 +56,19 @@ architecture Behavioral of vga_module is
             green:        out std_logic_vector(3 downto 0)
         );
     end component;
+    component binary_to_bcd is
+        generic (
+            g_INPUT_WIDTH    : in positive := 9;
+            g_DECIMAL_DIGITS : in positive := 4
+        );
+        Port (
+            i_Clock  : in std_logic;
+            i_Start  : in std_logic;
+            i_Binary : in std_logic_vector(g_INPUT_WIDTH-1 downto 0);
+            o_BCD    : out std_logic_vector(g_DECIMAL_DIGITS*4-1 downto 0);
+            o_DV     : out std_logic
+        );
+    end component;
 
 -- Internal Signals ------------------------------------------------------------
     signal reset: std_logic;
@@ -67,9 +80,10 @@ architecture Behavioral of vga_module is
     -- Box size signals:
     signal inc_box, dec_box: std_logic;
 
-    signal digit_tens: STD_LOGIC_VECTOR(3 downto 0) := "0110";
-    signal digit_ones: STD_LOGIC_VECTOR(3 downto 0) := "0110";
-    signal digit_tenths: STD_LOGIC_VECTOR(3 downto 0) := "0110";
+    signal digits_bcd: STD_LOGIC_VECTOR(11 downto 0);
+    signal digit_tens: STD_LOGIC_VECTOR(3 downto 0);
+    signal digit_ones: STD_LOGIC_VECTOR(3 downto 0);
+    signal digit_tenths: STD_LOGIC_VECTOR(3 downto 0);
 
 begin
 -- Module Instantiation --------------------------------------------------------
@@ -88,28 +102,40 @@ begin
         );
     VGA_SYNC: sync_signals_generator
         Port map(
-                pixel_clk   => i_pixel_clk,
-                reset       => reset,
-                hor_sync    => hsync,
-                ver_sync    => vsync,
-                blank       => vga_blank,
-                scan_line_x => scan_line_x,
-                scan_line_y => scan_line_y
+                pixel_clk    => i_pixel_clk,
+                reset        => reset,
+                hor_sync     => hsync,
+                ver_sync     => vsync,
+                blank        => vga_blank,
+                scan_line_x  => scan_line_x,
+                scan_line_y  => scan_line_y
+        );
+    BIN_TO_BCD: binary_to_bcd
+        Port map (
+                i_Clock      => clk,
+                i_Start      => '1',
+                i_Binary     => distance,
+                o_BCD        => digits_bcd,
+                o_DV         => open
         );
     BOX: digits_box
         Port map (
-                clk         => clk,
-                reset       => reset,
-                digit_tens => digit_tens,
-                digit_ones => digit_ones,
+                clk          => clk,
+                reset        => reset,
+                digit_tens   => digit_tens,
+                digit_ones   => digit_ones,
                 digit_tenths => digit_tenths,
-                scan_line_x => scan_line_x,
-                scan_line_y => scan_line_y,
-                --kHz         => i_kHz,
-                red         => red,
-                blue        => blue,
-                green       => green
+                scan_line_x  => scan_line_x,
+                scan_line_y  => scan_line_y,
+                --kHz          => i_kHz,
+                red          => red,
+                blue         => blue,
+                green        => green
         );
+
+digit_tens <= digits_bcd(11 downto 8);
+digit_ones <= digits_bcd(7 downto 4);
+digit_tenths <= digits_bcd(3 downto 0);
 
 end Behavioral;
 

@@ -23,7 +23,7 @@ end main_module;
 architecture Behavioral of main_module is
 -- Modules ---------------------------------------------------------------------
     component signal_gen is
-        generic (width: integer);
+        generic (width: integer := 9);
         Port (
                 clk         : in  STD_LOGIC;
                 reset       : in  STD_LOGIC;
@@ -33,7 +33,7 @@ architecture Behavioral of main_module is
          );
     end component;
     component estimator is
-        generic (width: integer);
+        generic (width: integer := 9);
         Port (
                 clk         : in  STD_LOGIC;
                 reset       : in  STD_LOGIC;
@@ -42,7 +42,7 @@ architecture Behavioral of main_module is
          );
     end component;
     component vga_module is
-        generic (width: integer);
+        generic (width: integer := 9);
         Port (
                 clk         : in  STD_LOGIC;
                 --reset       : in  STD_LOGIC;
