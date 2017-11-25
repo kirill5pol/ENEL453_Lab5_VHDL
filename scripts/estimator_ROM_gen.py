@@ -4,6 +4,7 @@ import numpy as np
 binary_width = 9
 
 x = np.linspace(0, 2**binary_width-1, 2**binary_width) # voltage
+# TODO: this function is wrong! fix this!
 y = (-5E-07)*(x/10.)**5 + (6E-05)*(x/10.)**4 - (0.0028)*(x/10.)**3 + (0.0662)*(x/10.)**2 - (0.8254)*(x/10.) + 5.1286 # distance
 np.clip(y, 0, ((2**binary_width-1)/10.), out=y) # limit distances to 0 - 51.1 cm
 
