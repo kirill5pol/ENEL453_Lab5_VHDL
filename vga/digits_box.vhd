@@ -111,7 +111,6 @@ begin
         current_sig_x_offset <= CONV_INTEGER(UNSIGNED(scan_line_x - pos_start_x_current_sig));
         current_sig_y_offset <= CONV_INTEGER(UNSIGNED(scan_line_y - pos_start_y));
 
-    -- TODO: refactor to only use CURRENT digit not all three!
     -- Get the values of the current digits
         current_digit_value <=
                 digit_tens when (currently_sig_digit_tens = '1')
