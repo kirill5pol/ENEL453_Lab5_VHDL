@@ -119,6 +119,22 @@ begin
                 o_BCD        => digits_bcd,
                 o_DV         => open
         );
+
+
+    DELAY_DIGITS: process(i_hHz, reset) -- only update the digits once a second on the vga
+    begin
+        if (reset = '1') then
+            digit_tens <= "0000";
+            digit_ones <= "0000";
+            digit_tenths <= "0000";
+        elsif (rising_edge(i_hHz)) then
+            digit_tens <= digits_bcd(11 downto 8);
+            digit_ones <= digits_bcd(7 downto 4);
+            digit_tenths <= digits_bcd(3 downto 0);
+        end if;
+    end process;
+
+
     BOX: digits_box
         Port map (
                 clk          => clk,
@@ -134,9 +150,6 @@ begin
                 green        => green
         );
 
-digit_tens <= digits_bcd(11 downto 8);
-digit_ones <= digits_bcd(7 downto 4);
-digit_tenths <= digits_bcd(3 downto 0);
 
 end Behavioral;
 
