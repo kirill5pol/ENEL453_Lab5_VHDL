@@ -2,10 +2,9 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 entity vga_module is
-    Generic (dist_width : integer := 9); -- Optional sig digs for the distance
     Port (
             clk         : in  STD_LOGIC;
-            distance    : in  STD_LOGIC_VECTOR(dist_width-1 downto 0);
+            distance    : in  STD_LOGIC_VECTOR(9-1 downto 0); -- 9 is dist_width
             red         : out STD_LOGIC_VECTOR(3 downto 0);
             green       : out STD_LOGIC_VECTOR(3 downto 0);
             blue        : out STD_LOGIC_VECTOR(3 downto 0);
@@ -111,6 +110,8 @@ begin
                 scan_line_y  => scan_line_y
         );
     BIN_TO_BCD: binary_to_bcd
+        generic map(g_INPUT_WIDTH => 9,
+                    g_DECIMAL_DIGITS => 4)
         Port map (
                 i_Clock      => clk,
                 i_Start      => '1',

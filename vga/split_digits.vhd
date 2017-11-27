@@ -12,7 +12,7 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 entity digits_box is
     Port ( 	clk         : in  STD_LOGIC;
 			reset       : in  STD_LOGIC;
-            distance    : in  STD_LOGIC_VECTOR(width-1 downto 0);
+            distance    : in  STD_LOGIC_VECTOR(9-1 downto 0); -- 9 is width
             bcd_digit_tens  : out STD_LOGIC_VECTOR(3 downto 0); -- Max number is 9 so we need 4 bits
             bcd_digit_ones  : out STD_LOGIC_VECTOR(3 downto 0); -- Max number is 9 so we need 4 bits
             bcd_digit_tenths: out STD_LOGIC_VECTOR(3 downto 0)  -- Max number is 9 so we need 4 bits

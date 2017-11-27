@@ -3,10 +3,10 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity PWM_DAC is
-    Generic ( width : integer := 9);
-    Port ( reset : in STD_LOGIC;
+    Port ( 
            clk : in STD_LOGIC;
-           duty_cycle : in STD_LOGIC_VECTOR (width-1 downto 0);
+           reset : in STD_LOGIC;
+           duty_cycle : in STD_LOGIC_VECTOR (0-1 downto 0); -- 9 is width
            pwm_out : out STD_LOGIC
           );
 end PWM_DAC;
