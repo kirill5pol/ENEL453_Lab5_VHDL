@@ -13,7 +13,7 @@ end PWM_DAC;
 
 architecture Behavioral of PWM_DAC is
 --    signal counter : STD_LOGIC_VECTOR (9 downto 0); -- original
-    signal counter : STD_LOGIC_VECTOR (width-1 downto 0); -- corrected
+    signal counter : STD_LOGIC_VECTOR (9-1 downto 0); -- corrected -- 9 is width
         
 begin
     count : process(clk,reset)

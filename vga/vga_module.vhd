@@ -111,7 +111,7 @@ begin
         );
     BIN_TO_BCD: binary_to_bcd
         generic map(g_INPUT_WIDTH => 9,
-                    g_DECIMAL_DIGITS => 4)
+                    g_DECIMAL_DIGITS => 3)
         Port map (
                 i_Clock      => clk,
                 i_Start      => '1',

@@ -7,8 +7,8 @@ use ieee.numeric_std.all;
  
 entity binary_to_bcd is
   generic (
-    g_INPUT_WIDTH    : in positive;
-    g_DECIMAL_DIGITS : in positive
+    g_INPUT_WIDTH    : in positive := 9;
+    g_DECIMAL_DIGITS : in positive := 3
     );
   port (
     i_Clock  : in std_logic;
@@ -87,13 +87,13 @@ begin
         when s_ADD =>
           v_Upper     := r_Digit_Index*4 + 3;
           v_Lower     := r_Digit_Index*4;
-          v_BCD_Digit := unsigned(r_BCD(v_Upper downto v_Lower));
+          v_BCD_Digit := unsigned(r_BCD(r_Digit_Index*4 + 3 downto r_Digit_Index*4));
            
           if v_BCD_Digit > 4 then
             v_BCD_Digit := v_BCD_Digit + 3;
           end if;
  
-          r_BCD(v_Upper downto v_Lower) <= std_logic_vector(v_BCD_Digit);
+          r_BCD(r_Digit_Index*4 + 3 downto r_Digit_Index*4) <= std_logic_vector(v_BCD_Digit);
           r_SM_Main <= s_CHECK_DIGIT_INDEX;
  
  
