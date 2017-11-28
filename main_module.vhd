@@ -41,7 +41,7 @@ architecture Behavioral of main_module is
     component vga_module is
         Port (
                 clk         : in  STD_LOGIC;
-                --reset       : in  STD_LOGIC;
+                reset       : in  STD_LOGIC;
                 distance    : in  STD_LOGIC_VECTOR(9-1 downto 0); -- estimated distance -- 9 is width
                 red         : out STD_LOGIC_VECTOR(3 downto 0);
                 green       : out STD_LOGIC_VECTOR(3 downto 0);
@@ -76,7 +76,7 @@ begin
     VGA_DISPLAY: vga_module
         Port map ( 
                 clk          => clk,
-                --reset       => reset,
+                reset       => reset,
                 distance     => distance,
                 red          => red,
                 green        => green,
