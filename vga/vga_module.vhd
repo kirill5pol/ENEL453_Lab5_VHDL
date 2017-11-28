@@ -4,6 +4,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity vga_module is
     Port (
             clk         : in  STD_LOGIC;
+            reset       : in  STD_LOGIC;
             distance    : in  STD_LOGIC_VECTOR(9-1 downto 0); -- 9 is dist_width
             red         : out STD_LOGIC_VECTOR(3 downto 0);
             green       : out STD_LOGIC_VECTOR(3 downto 0);
@@ -37,7 +38,7 @@ architecture Behavioral of vga_module is
             minutes_port    : out STD_LOGIC_VECTOR(4-1 downto 0); -- unused
             ten_minutes_port: out STD_LOGIC_VECTOR(3-1 downto 0); -- unused
             twentyfive_MHz  : out STD_LOGIC;
-            hHz             : out STD_LOGIC
+            Hz              : out STD_LOGIC
         );
     end component;
     component digits_box is
@@ -70,9 +71,8 @@ architecture Behavioral of vga_module is
     end component;
 
 -- Internal Signals ------------------------------------------------------------
-    signal reset: std_logic;
     -- Clock divider signals:
-    signal i_kHz, i_hHz, i_pixel_clk: std_logic;
+    signal i_kHz, i_Hz, i_pixel_clk: std_logic;
     -- Sync module signals:
     signal vga_blank : std_logic;
     signal scan_line_x, scan_line_y: STD_LOGIC_VECTOR(10 downto 0);
@@ -97,7 +97,7 @@ begin
                 ten_seconds_port => open,
                 minutes_port     => open,
                 ten_minutes_port => open,
-                hHz              => i_hHz
+                Hz               => i_Hz
         );
     VGA_SYNC: sync_signals_generator
         Port map(
@@ -121,13 +121,13 @@ begin
         );
 
 
-    DELAY_DIGITS: process(i_hHz, reset) -- only update the digits once a second on the vga
+    DELAY_DIGITS: process(i_Hz, reset) -- only update the digits once a second on the vga
     begin
         if (reset = '1') then
             digit_tens <= "0000";
             digit_ones <= "0000";
             digit_tenths <= "0000";
-        elsif (rising_edge(i_hHz)) then
+        elsif (rising_edge(i_Hz)) then
             digit_tens <= digits_bcd(11 downto 8);
             digit_ones <= digits_bcd(7 downto 4);
             digit_tenths <= digits_bcd(3 downto 0);

@@ -13,7 +13,7 @@ entity clock_divider is
 		   ten_minutes_port: out STD_LOGIC_VECTOR(3-1 downto 0);
 		   -- ADDED:
 		   twentyfive_MHz: out STD_LOGIC;
-		   hHz: out STD_LOGIC
+		   Hz: out STD_LOGIC
 		  );
 end clock_divider;
 
@@ -176,6 +176,6 @@ minutes_port <= minutes_value;
 ten_minutes_port <= ten_minutes_value;
 
 -- ADDED:
-hHz <= hundredhertz;
+Hz <= onehertz;
 
 end Behavioral;
