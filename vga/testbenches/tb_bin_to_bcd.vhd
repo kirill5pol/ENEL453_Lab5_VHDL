@@ -18,9 +18,9 @@ architecture tb of tb_bin_to_bcd is
         );
     end component;
 
-    signal i_Clock  : std_logic;
-    signal i_Start  : std_logic;
-    signal i_Binary : std_logic_vector (9-1 downto 0); -- Set g_input_width to 9
+    signal i_Clock  : std_logic := '0';
+    signal i_Start  : std_logic := '1';
+    signal i_Binary : std_logic_vector (9-1 downto 0) := (others <= '0'); -- Set g_input_width to 9
     signal o_BCD    : std_logic_vector (3*4-1 downto 0); -- Set g_decimal_digits to 3
     signal o_DV     : std_logic;
 
@@ -57,8 +57,6 @@ begin
     -- Test Bench process
     stimuli : process
     begin
-        i_Start <= '1';
-        i_Binary <= (others => '0');
         wait for 1000 * TbPeriod;
     end process;
 
