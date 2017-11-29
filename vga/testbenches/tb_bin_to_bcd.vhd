@@ -26,7 +26,6 @@ architecture tb of tb_bin_to_bcd is
 
     constant TbPeriod : time := 10 ns; -- Period of clock
     signal TbClock : std_logic := '0';
-    signal TbSimEnded : std_logic := '0';
 
 begin
 -- Module to test
@@ -39,15 +38,13 @@ begin
 
 -- Testbench processes
     -- Clock generation
-    clk_process : process
-        if TbSimEnded /= '1' then
-            TbClock <= not TbClock;
-        else
-            TbClock <= '0';
-        end if;
-
-        wait TbClock/2;
-    begin
+    clk_process :process
+   begin
+        TbClock <= '0';
+        wait for TbPeriod/2;
+        TbClock <= '1';
+        wait for TbPeriod/2;
+   end process; 
 
     -- Counter input (eg distance)
     input_counter: process(TbClock)
@@ -63,10 +60,6 @@ begin
         i_Start <= '1';
         i_Binary <= (others => '0');
         wait for 1000 * TbPeriod;
-
-        -- Stop the clock and hence terminate the simulation
-        TbSimEnded <= '1';
-        wait;
     end process;
 
 end tb;
