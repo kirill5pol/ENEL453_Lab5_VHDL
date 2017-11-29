@@ -1,5 +1,7 @@
 library ieee;
-use ieee.std_logic_1164.all;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity tb_bin_to_bcd is
 end tb_bin_to_bcd;
@@ -37,13 +39,21 @@ begin
 
 -- Testbench processes
     -- Clock generation
-    TbClock <= not TbClock after TbPeriod/2 when TbSimEnded /= '1' else '0';
+    clk_process : process
+        if TbSimEnded /= '1' then
+            TbClock <= not TbClock;
+        else
+            TbClock <= '0';
+        end if;
+
+        wait TbClock/2;
+    begin
 
     -- Counter input (eg distance)
     input_counter: process(TbClock)
     begin
         if (rising_edge(TbClock)) then
-            input_counter <= input_counter + 1;
+            i_Binary <= i_Binary + 1;
         end if;
     end process ; -- input_counter
 
