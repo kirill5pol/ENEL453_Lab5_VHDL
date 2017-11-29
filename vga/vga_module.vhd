@@ -5,6 +5,11 @@ entity vga_module is
     Port (
             clk         : in  STD_LOGIC;
             reset       : in  STD_LOGIC;
+
+            digit_tens  : in  STD_LOGIC_VECTOR(3 downto 0);
+            digit_ones  : in  STD_LOGIC_VECTOR(3 downto 0);
+            digit_tenths: in  STD_LOGIC_VECTOR(3 downto 0);
+
             distance    : in  STD_LOGIC_VECTOR(9-1 downto 0); -- 9 is dist_width
             red         : out STD_LOGIC_VECTOR(3 downto 0);
             green       : out STD_LOGIC_VECTOR(3 downto 0);
@@ -56,19 +61,6 @@ architecture Behavioral of vga_module is
             green:        out std_logic_vector(3 downto 0)
         );
     end component;
-    component binary_to_bcd is
-        generic (
-            g_INPUT_WIDTH    : in positive := 9;
-            g_DECIMAL_DIGITS : in positive := 4
-        );
-        Port (
-            i_Clock  : in std_logic;
-            i_Start  : in std_logic;
-            i_Binary : in std_logic_vector(g_INPUT_WIDTH-1 downto 0);
-            o_BCD    : out std_logic_vector(g_DECIMAL_DIGITS*4-1 downto 0);
-            o_DV     : out std_logic
-        );
-    end component;
 
 -- Internal Signals ------------------------------------------------------------
     -- Clock divider signals:
@@ -79,10 +71,9 @@ architecture Behavioral of vga_module is
     -- Box size signals:
     signal inc_box, dec_box: std_logic;
 
-    signal digits_bcd: STD_LOGIC_VECTOR(11 downto 0);
-    signal digit_tens: STD_LOGIC_VECTOR(3 downto 0);
-    signal digit_ones: STD_LOGIC_VECTOR(3 downto 0);
-    signal digit_tenths: STD_LOGIC_VECTOR(3 downto 0);
+    signal i_digit_tens: STD_LOGIC_VECTOR(3 downto 0);
+    signal i_digit_ones: STD_LOGIC_VECTOR(3 downto 0);
+    signal i_digit_tenths: STD_LOGIC_VECTOR(3 downto 0);
 
 begin
 -- Module Instantiation --------------------------------------------------------
@@ -109,28 +100,17 @@ begin
                 scan_line_x  => scan_line_x,
                 scan_line_y  => scan_line_y
         );
-    BIN_TO_BCD: binary_to_bcd
-        generic map(g_INPUT_WIDTH => 9,
-                    g_DECIMAL_DIGITS => 3)
-        Port map (
-                i_Clock      => clk,
-                i_Start      => '1',
-                i_Binary     => distance,
-                o_BCD        => digits_bcd,
-                o_DV         => open
-        );
-
 
     DELAY_DIGITS: process(i_Hz, reset) -- only update the digits once a second on the vga
     begin
         if (reset = '1') then
-            digit_tens <= "0000";
-            digit_ones <= "0000";
-            digit_tenths <= "0000";
+            i_digit_tens <= "0000";
+            i_digit_ones <= "0000";
+            i_digit_tenths <= "0000";
         elsif (rising_edge(i_Hz)) then
-            digit_tens <= digits_bcd(11 downto 8);
-            digit_ones <= digits_bcd(7 downto 4);
-            digit_tenths <= digits_bcd(3 downto 0);
+            i_digit_tens <= digit_tens;
+            i_digit_ones <= digit_ones;
+            i_digit_tenths <= digit_tenths;
         end if;
     end process;
 
@@ -139,9 +119,9 @@ begin
         Port map (
                 clk          => clk,
                 reset        => reset,
-                digit_tens   => digit_tens,
-                digit_ones   => digit_ones,
-                digit_tenths => digit_tenths,
+                digit_tens   => i_digit_tens,
+                digit_ones   => i_digit_ones,
+                digit_tenths => i_digit_tenths,
                 scan_line_x  => scan_line_x,
                 scan_line_y  => scan_line_y,
                 --kHz          => i_kHz,
