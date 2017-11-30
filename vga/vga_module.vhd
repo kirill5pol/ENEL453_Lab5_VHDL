@@ -5,12 +5,7 @@ entity vga_module is
     Port (
             clk         : in  STD_LOGIC;
             reset       : in  STD_LOGIC;
-
-            digit_tens  : in  STD_LOGIC_VECTOR(3 downto 0);
-            digit_ones  : in  STD_LOGIC_VECTOR(3 downto 0);
-            digit_tenths: in  STD_LOGIC_VECTOR(3 downto 0);
-
-            distance    : in  STD_LOGIC_VECTOR(9-1 downto 0); -- 9 is dist_width
+            distance_bcd(): in  STD_LOGIC_VECTOR(3*4-1 downto 0);
             red         : out STD_LOGIC_VECTOR(3 downto 0);
             green       : out STD_LOGIC_VECTOR(3 downto 0);
             blue        : out STD_LOGIC_VECTOR(3 downto 0);
@@ -108,9 +103,9 @@ begin
             i_digit_ones <= "0000";
             i_digit_tenths <= "0000";
         elsif (rising_edge(i_Hz)) then
-            i_digit_tens <= digit_tens;
-            i_digit_ones <= digit_ones;
-            i_digit_tenths <= digit_tenths;
+            i_digit_tens <= distance_bcd(11 downto 8);
+            i_digit_ones <= distance_bcd(7 downto 4);
+            i_digit_tenths <= distance_bcd(3 downto 0);
         end if;
     end process;
 
