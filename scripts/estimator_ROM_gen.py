@@ -116,7 +116,7 @@ def main(filename='../estimator/estimator.vhd',
          max_voltage=3.3,# FPGA voltage is 3.3v
          # The actual function we're using
          distance_func=lambda x:(3.2194*x**4 - 25.53*x**3 + 75.61*x**2 - 102.92*x + 62.383),
-         scales={'dists_cm': 1, 'dists_mm': 10, 'dists_in': 0.3937008}
+         scales={'dists_cm': 1, 'dists_mm': 10, 'dists_in': 0.3937008} # TODO add Wiffle as measurement: 3.2cm
         ):
     # Creates the function to go from voltages to distances
     voltages = np.linspace(0, max_voltage, 2**binary_width) # voltages in volts
