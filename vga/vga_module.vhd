@@ -5,7 +5,7 @@ entity vga_module is
     Port (
             clk         : in  STD_LOGIC;
             reset       : in  STD_LOGIC;
-            distance_bcd(): in  STD_LOGIC_VECTOR(3*4-1 downto 0);
+            distance_bcd: in  STD_LOGIC_VECTOR(3*4-1 downto 0);
             red         : out STD_LOGIC_VECTOR(3 downto 0);
             green       : out STD_LOGIC_VECTOR(3 downto 0);
             blue        : out STD_LOGIC_VECTOR(3 downto 0);

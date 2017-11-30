@@ -67,7 +67,7 @@ architecture Behavioral of main_module is
 
 -- Internal Signals ------------------------------------------------------------
     signal voltage : STD_LOGIC_VECTOR (9-1 downto 0); -- the approximate voltage -- 9 is width
-    signal distance: STD_LOGIC_VECTOR (9-1 downto 0); -- the estimated distance (0.0-30.0) needs at least 9 bits -- 9 is width
+    signal distance: STD_LOGIC_VECTOR (3*4-1 downto 0); -- the estimated distance (0.0-30.0) needs at least 9 bits -- 9 is width
     --signal dyn_clk : STD_LOGIC := '0'; -- A clock that slows down when you don't need to update as quickly
 begin
 
