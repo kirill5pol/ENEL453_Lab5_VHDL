@@ -46,7 +46,6 @@ architecture Behavioral of main_module is
         Port (
                 clk        : in  STD_LOGIC;
                 reset      : in  STD_LOGIC;
-                en_dists_mm: in STD_LOGIC;
                 en_dists_cm: in STD_LOGIC;
                 en_dists_in: in STD_LOGIC;
                 voltage    : in  STD_LOGIC_VECTOR(9-1 downto 0); -- 9 is the width

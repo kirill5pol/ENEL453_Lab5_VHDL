@@ -55,7 +55,7 @@ def write_estimator_vhd(filename, values, binary_width=9, num_digits=3):
     #---------------------------------------------------------------------------
     # Set which ROM to use as an input
     for key in keys:
-        code_string += '                    en_{}: in STD_LOGIC;\n'.format(key)
+        code_string += '                    en_{}: in  STD_LOGIC;\n'.format(key)
 
 
     #---------------------------------------------------------------------------
@@ -66,7 +66,7 @@ def write_estimator_vhd(filename, values, binary_width=9, num_digits=3):
     end estimator;\n\
     \n\
     architecture Behavioral of estimator is\n'.format(num_digits)
-    code_string += '    type ROM is array (0 to {}) of STD_LOGIC_VECTOR({} downto 0);\n'.format(2**binary_width-1, binary_width-1)
+    code_string += '    type ROM is array (0 to {}) of STD_LOGIC_VECTOR({}*4-1 downto 0);\n'.format(2**binary_width-1, num_digits)
 
     
 
@@ -80,12 +80,12 @@ def write_estimator_vhd(filename, values, binary_width=9, num_digits=3):
     code_string += '\n\
     begin\n\
     -- Internal processes ----------------------------------------------------------\n\
-    select_rom : process('
+    select_rom : process(voltage, '
 
 
     #---------------------------------------------------------------------------
     # Code for selecting which ROM is used
-    code_string += ''.join([' en_{}, '.format(key) for key in keys])[1:-2] # Remove trailing comma & space
+    code_string += ''.join([' en_{},'.format(key) for key in keys])[1:-1] # Remove trailing comma & space
     
     code_string += ')\n\
     begin\n\
@@ -132,8 +132,6 @@ def main(filename='../estimator/estimator.vhd',
     bcd_ROMs = {}
     for name, scale in scales.iteritems():
         bcd_ROMs[name] = vnum_to_bcd(distances * scale, num_digits)
-        print('\n\n\n\n{}\n\n{}'.format(name, distances * scale))
-        print('\n\n{}'.format(vnum_to_bcd(distances * scale, num_digits)))
 
     # Write the file
     write_estimator_vhd(filename, bcd_ROMs, binary_width=binary_width, num_digits=num_digits)

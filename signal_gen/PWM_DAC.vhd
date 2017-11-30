@@ -6,7 +6,7 @@ entity PWM_DAC is
     Port ( 
            clk : in STD_LOGIC;
            reset : in STD_LOGIC;
-           duty_cycle : in STD_LOGIC_VECTOR (0-1 downto 0); -- 9 is width
+           duty_cycle : in STD_LOGIC_VECTOR (9-1 downto 0); -- 9 is width
            pwm_out : out STD_LOGIC
           );
 end PWM_DAC;
