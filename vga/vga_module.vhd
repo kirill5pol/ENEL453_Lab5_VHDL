@@ -99,7 +99,7 @@ begin
                 scan_line_y  => scan_line_y
         );
 
-    DELAY_DIGITS: process(i_daHz, reset) -- only update the digits once a second on the vga
+    DELAY_DIGITS: process(i_Hz, reset) -- only update the digits once a second on the vga
     begin
         if (reset = '1') then
             i_digit_tens <= "0000";
