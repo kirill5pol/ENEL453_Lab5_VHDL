@@ -40,6 +40,9 @@ begin
     begin
         if( reset = '1') then
             counter <= (others => '0');
+            voltage <= (others => '0');
+            i_voltage <= (others => '0');
+            i_voltage_prev <= (others => '0');
         elsif (rising_edge(clk)) then
             counter <= counter + '1';
         end if;
@@ -48,10 +51,11 @@ begin
     ramp_gen : process(clk, reset, counter)
     begin
         if( reset = '1') then
+            counter <= (others => '0');
             voltage <= (others => '0');
             i_voltage <= (others => '0');
             i_voltage_prev <= (others => '0');
-        elsif (rising_edge(clk) AND (counter(9-1) = "111111111")) then
+        elsif (rising_edge(clk) AND (counter(9-1 downto 0) = "111111111")) then
             i_voltage <= i_voltage + 1;
             i_voltage_prev <= i_voltage;
         end if;
@@ -62,7 +66,10 @@ begin
     check_real_voltage: process(clk, reset) -- Todo: fix to remove bit bobble
     begin
         if (reset = '1') then
-            -- Reset all outputs   
+            counter <= (others => '0');
+            voltage <= (others => '0');
+            i_voltage <= (others => '0');
+            i_voltage_prev <= (others => '0');
         elsif (rising_edge(clk)) then
             if (comparator = '0') then
                 voltage <= i_voltage_prev; -- Copy the voltage change
