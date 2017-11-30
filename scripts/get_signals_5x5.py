@@ -67,6 +67,10 @@ sig_9 = [['-', '9', '9', '9', '9'],
          ['-', '-', '-', '9', '-'],
          ['9', '9', '9', '-', '-']][::-1]
 
+rotate90 = lambda mat: zip(*mat[::-1])
+
+sig_0, sig_1, sig_1, sig_2, sig_3, sig_4, sig_5, sig_6, sig_7, sig_8, sig_9 = [rotate90(sig_0), rotate90(sig_1), rotate90(sig_1), rotate90(sig_2), rotate90(sig_3), rotate90(sig_4), rotate90(sig_5), rotate90(sig_6), rotate90(sig_7), rotate90(sig_8), rotate90(sig_9)]
+
 
 scale = 5 # Scale the image by this size new image will be (scale*5 by scale*5 pixels)
 
