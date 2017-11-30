@@ -26,6 +26,7 @@ architecture Behavioral of signal_gen is
 
 -- Internal Signals ------------------------------------------------------------
     signal i_voltage     : STD_LOGIC_VECTOR(9-1 downto 0) := (others => '0'); -- 9 is width
+
     constant min_voltage : STD_LOGIC_VECTOR(9-1 downto 0) := (others => '0'); -- 9 is width
     constant max_voltage : STD_LOGIC_VECTOR(9-1 downto 0) := (others => '1'); -- 9 is width
 
@@ -47,11 +48,12 @@ begin
         end if;
     end process;
 
+
     update_internal_voltage: process(clk, reset) -- Todo: fix to remove bit bobble
     begin
         if (reset = '1') then
             -- Reset all outputs    
-        elsif (rising_edge(clk) AND (counter(10-1) = '1') then
+        elsif (rising_edge(clk) AND (counter(10-1) = '1')) then
             if (comparator = '1') then
                 -- Increase Voltage
                 if (i_voltage < max_voltage) then
@@ -59,9 +61,8 @@ begin
                     end if;
             elsif (comparator = '0') then
                 -- Decrease Voltage
-                if (i_voltage > min_voltage) then
-                    i_voltage <= i_voltage - 1;
-                end if;
+                voltage <= i_voltage;
+                i_voltage <= '0';
             end if;
         end if;
     end process update_internal_voltage;
