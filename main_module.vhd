@@ -18,7 +18,7 @@ entity main_module is
             vsync     : out STD_LOGIC;
             -- Comparator signals
             comparator : in  STD_LOGIC; -- If 1: increase voltage, If 0: decrease
-            comparator_led : out STD_LOGIC; -- An led displaying the current value of the comparator
+            led        : out STD_LOGIC_VECTOR(9-1 downto 0); -- LEDs displaying the current value of the comparator
             pwm_out    : out STD_LOGIC
           );
 end main_module;
@@ -110,6 +110,6 @@ begin
             );
 
 -- LEDs & fun stuff
-    comparator_led <= comparator;
+    led <= voltage;
 
 end Behavioral;
