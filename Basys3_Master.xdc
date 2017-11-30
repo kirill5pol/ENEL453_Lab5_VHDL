@@ -44,8 +44,8 @@ set_property PACKAGE_PIN T1 [get_ports {en_dists_cm}]
  
 
 ## LEDs
-#set_property PACKAGE_PIN U16 [get_ports {led[0]}]					
-	#set_property IOSTANDARD LVCMOS33 [get_ports {led[0]}]
+set_property PACKAGE_PIN U16 [get_ports {comparator_led]					
+	set_property IOSTANDARD LVCMOS33 [get_ports {comparator_led]
 #set_property PACKAGE_PIN E19 [get_ports {led[1]}]					
 	#set_property IOSTANDARD LVCMOS33 [get_ports {led[1]}]
 #set_property PACKAGE_PIN U19 [get_ports {led[2]}]					

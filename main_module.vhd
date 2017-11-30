@@ -18,6 +18,7 @@ entity main_module is
             vsync     : out STD_LOGIC;
             -- Comparator signals
             comparator : in  STD_LOGIC; -- If 1: increase voltage, If 0: decrease
+            comparator_led : out STD_LOGIC; -- An led displaying the current value of the comparator
             pwm_out    : out STD_LOGIC
           );
 end main_module;
@@ -46,8 +47,8 @@ architecture Behavioral of main_module is
         Port (
                 clk        : in  STD_LOGIC;
                 reset      : in  STD_LOGIC;
-                en_dists_cm: in STD_LOGIC;
-                en_dists_in: in STD_LOGIC;
+                en_dists_cm: in  STD_LOGIC;
+                en_dists_in: in  STD_LOGIC;
                 voltage    : in  STD_LOGIC_VECTOR(9-1 downto 0); -- 9 is the width
                 distance   : out STD_LOGIC_VECTOR(3*4-1 downto 0)
          );
@@ -107,5 +108,8 @@ begin
                 hsync       => hsync,
                 vsync       => vsync
             );
+
+-- LEDs & fun stuff
+    comparator_led <= comparator;
 
 end Behavioral;
