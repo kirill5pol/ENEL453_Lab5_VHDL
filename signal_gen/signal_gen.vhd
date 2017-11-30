@@ -25,18 +25,33 @@ architecture Behavioral of signal_gen is
     end component;
 
 -- Internal Signals ------------------------------------------------------------
-    signal i_voltage: STD_LOGIC_VECTOR(9-1 downto 0) := (others => '0'); -- 9 is width
-    signal min_voltage: STD_LOGIC_VECTOR(9-1 downto 0) := (others => '0'); -- 9 is width
-    signal max_voltage: STD_LOGIC_VECTOR(9-1 downto 0) := (others => '1'); -- 9 is width
+    signal i_voltage     : STD_LOGIC_VECTOR(9-1 downto 0) := (others => '0'); -- 9 is width
+    constant min_voltage : STD_LOGIC_VECTOR(9-1 downto 0) := (others => '0'); -- 9 is width
+    constant max_voltage : STD_LOGIC_VECTOR(9-1 downto 0) := (others => '1'); -- 9 is width
+
+    signal counter : STD_LOGIC_VECTOR (9-1 downto 0); -- update along with pwm DAC
 
 
 begin
 -- Internal processes ----------------------------------------------------------
-    UpdateVoltage: process(clk, reset) -- Todo: fix to remove bit bobble
+    count : process(clk,reset)
+    begin
+        if( reset = '1') then
+            counter <= (others => '0');
+        elsif (rising_edge(clk)) then
+            if (counter(10-1) = '1') then
+                counter <= (others => '0');
+            else
+                counter <= counter + '1';
+            end if;
+        end if;
+    end process;
+
+    update_internal_voltage: process(clk, reset) -- Todo: fix to remove bit bobble
     begin
         if (reset = '1') then
             -- Reset all outputs    
-        elsif (rising_edge(clk)) then
+        elsif (rising_edge(clk) AND (counter(10-1) = '1') then
             if (comparator = '1') then
                 -- Increase Voltage
                 if (i_voltage < max_voltage) then
@@ -46,12 +61,10 @@ begin
                 -- Decrease Voltage
                 if (i_voltage > min_voltage) then
                     i_voltage <= i_voltage - 1;
-                    end if;
+                end if;
             end if;
         end if;
-    end process UpdateVoltage;
-
-    voltage <= i_voltage;
+    end process update_internal_voltage;
 
 -- Module instantiation --------------------------------------------------------
     PWM_DAC_OUTPUT: PWM_DAC
