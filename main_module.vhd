@@ -56,7 +56,7 @@ architecture Behavioral of main_module is
         Port (
                 clk         : in  STD_LOGIC;
                 reset       : in  STD_LOGIC;
-                distance    : in  STD_LOGIC_VECTOR(3*4-1 downto 0); -- estimated distance -- 3 digits of 4 bits (bcd)
+                distance_bcd: in  STD_LOGIC_VECTOR(3*4-1 downto 0); -- estimated distance -- 3 digits of 4 bits (bcd)
                 red         : out STD_LOGIC_VECTOR(3 downto 0);
                 green       : out STD_LOGIC_VECTOR(3 downto 0);
                 blue        : out STD_LOGIC_VECTOR(3 downto 0);
