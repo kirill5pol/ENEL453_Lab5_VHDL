@@ -35,17 +35,17 @@ set_property PACKAGE_PIN W5 [get_ports clk]
 #	set_property IOSTANDARD LVCMOS33 [get_ports {switches[11]}]
 #set_property PACKAGE_PIN W2 [get_ports {switches[12]}]					
 #	set_property IOSTANDARD LVCMOS33 [get_ports {switches[12]}]
-set_property PACKAGE_PIN U1 [get_ports {en_dists_in}]					
-	set_property IOSTANDARD LVCMOS33 [get_ports {en_dists_in}]
-set_property PACKAGE_PIN T1 [get_ports {en_dists_cm}]					
-	set_property IOSTANDARD LVCMOS33 [get_ports {en_dists_cm}]
-#set_property PACKAGE_PIN R2 [get_ports {en_dists_in}]					
-	#set_property IOSTANDARD LVCMOS33 [get_ports {en_dists_in}]
+set_property PACKAGE_PIN U1 [get_ports en_dists_in]					
+	set_property IOSTANDARD LVCMOS33 [get_ports en_dists_in]
+set_property PACKAGE_PIN T1 [get_ports en_dists_cm]					
+	set_property IOSTANDARD LVCMOS33 [get_ports en_dists_cm]
+#set_property PACKAGE_PIN R2 [get_ports en_dists_in]					
+	#set_property IOSTANDARD LVCMOS33 [get_ports en_dists_in]
  
 
 ## LEDs
-set_property PACKAGE_PIN U16 [get_ports {comparator_led]					
-	set_property IOSTANDARD LVCMOS33 [get_ports {comparator_led]
+set_property PACKAGE_PIN U16 [get_ports comparator_led]					
+	set_property IOSTANDARD LVCMOS33 [get_ports comparator_led]
 #set_property PACKAGE_PIN E19 [get_ports {led[1]}]					
 	#set_property IOSTANDARD LVCMOS33 [get_ports {led[1]}]
 #set_property PACKAGE_PIN U19 [get_ports {led[2]}]					
@@ -128,8 +128,8 @@ set_property PACKAGE_PIN U17 [get_ports reset]
 set_property PACKAGE_PIN J1 [get_ports pwm_out]					
 	set_property IOSTANDARD LVCMOS33 [get_ports pwm_out]
 ##Sch name = JA2
-#set_property PACKAGE_PIN L2 [get_ports {JA[1]}]					
-	#set_property IOSTANDARD LVCMOS33 [get_ports {JA[1]}]
+set_property PACKAGE_PIN L2 [get_ports comparator]					
+	set_property IOSTANDARD LVCMOS33 [get_ports comparator]
 ##Sch name = JA3
 #set_property PACKAGE_PIN J2 [get_ports {JA[2]}]					
 	#set_property IOSTANDARD LVCMOS33 [get_ports {JA[2]}]
@@ -153,11 +153,11 @@ set_property PACKAGE_PIN J1 [get_ports pwm_out]
 
 ##Pmod Header JB
 ##Sch name = JB1
-set_property PACKAGE_PIN A14 [get_ports comparator]					
-	set_property IOSTANDARD LVCMOS33 [get_ports comparator]
+set_property PACKAGE_PIN A14 [get_ports pwm_out]					
+	set_property IOSTANDARD LVCMOS33 [get_ports pwm_out]
 ##Sch name = JB2
-#set_property PACKAGE_PIN A16 [get_ports {JB[1]}]					
-	#set_property IOSTANDARD LVCMOS33 [get_ports {JB[1]}]
+set_property PACKAGE_PIN A16 [get_ports comparator]					
+	set_property IOSTANDARD LVCMOS33 [get_ports comparator]
 ##Sch name = JB3
 #set_property PACKAGE_PIN B15 [get_ports {JB[2]}]					
 	#set_property IOSTANDARD LVCMOS33 [get_ports {JB[2]}]
