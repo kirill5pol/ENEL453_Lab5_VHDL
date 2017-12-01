@@ -22,7 +22,7 @@ entity digits_box is
             clk:          in  STD_LOGIC;
             reset:        in  STD_LOGIC;
 
-            distance_bcd: in  STD_LOGIC_VECTOR(4*4-1 downto 0);
+            bcd_input:    in  STD_LOGIC_VECTOR(4*4-1 downto 0);
 
             scan_line_x:  in  STD_LOGIC_VECTOR(10 downto 0);
             scan_line_y:  in  STD_LOGIC_VECTOR(10 downto 0);
@@ -121,10 +121,10 @@ begin
 
     -- Get the values of the current digits
         current_digit_value <=
-                distance_bcd(4*4-1 downto 3*4) when (currently_sig_digit_d1 = '1')
-                else distance_bcd(4*3-1 downto 2*4) when (currently_sig_digit_d2 = '1')
-                else distance_bcd(4*2-1 downto 1*4) when (currently_sig_digit_d3 = '1')
-                else distance_bcd(4*1-1 downto 0*4) when (currently_sig_digit_d4 = '1')
+                bcd_input(4*4-1 downto 3*4) when (currently_sig_digit_d1 = '1')
+                else bcd_input(4*3-1 downto 2*4) when (currently_sig_digit_d2 = '1')
+                else bcd_input(4*2-1 downto 1*4) when (currently_sig_digit_d3 = '1')
+                else bcd_input(4*1-1 downto 0*4) when (currently_sig_digit_d4 = '1')
                 else (others => '0');
  
         CURRENT_DIGIT: process(current_digit_value)
@@ -140,7 +140,7 @@ begin
                 when "0111" => output_digit <= sig_7;
                 when "1000" => output_digit <= sig_8;
                 when "1001" => output_digit <= sig_9;
-                when "1110" => output_digit <= sig_D;
+                when "1100" => output_digit <= sig_D;
                 when others => output_digit <= sig_E;
             end case;
         end process;
