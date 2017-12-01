@@ -21,7 +21,7 @@ entity dynamic_clk is
         Port (
                 clk      : in  STD_LOGIC;
                 reset    : in  STD_LOGIC;
-                voltage  : out STD_LOGIC_VECTOR(9-1 downto 0); -- 9 is width
+                voltage  : in  STD_LOGIC_VECTOR(9-1 downto 0); -- 9 is width
                 out_clk  : out STD_LOGIC
          );
 end dynamic_clk;

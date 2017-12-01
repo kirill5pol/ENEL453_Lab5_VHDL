@@ -1,4 +1,6 @@
 library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity clk_div is
         Port (
@@ -24,54 +26,73 @@ architecture Behavioral of clk_div is
                 clk_out: out STD_LOGIC
         );
     end component;
+    signal i_clk_1x : STD_LOGIC := '0';
+    signal i_clk_2x : STD_LOGIC := '0';
+    signal i_clk_3x : STD_LOGIC := '0';
+    signal i_clk_4x : STD_LOGIC := '0';
+    signal i_clk_5x : STD_LOGIC := '0';
+    signal i_clk_6x : STD_LOGIC := '0';
+    signal i_clk_7x : STD_LOGIC := '0';
+    signal i_clk_8x : STD_LOGIC := '0';
+
 begin
 -- Module instantiations -------------------------------------------------------
     slowed_clk_1: divide_by_2
         Port map (
                     clk     => clk,
                     reset   => reset,
-                    clk_out => clk_1x
+                    clk_out => i_clk_1x
         );
     slowed_clk_2: divide_by_2
         Port map (
-                    clk     => clk_1x,
+                    clk     => i_clk_1x,
                     reset   => reset,
-                    clk_out => clk_2x
+                    clk_out => i_clk_2x
         );
     slowed_clk_3: divide_by_2
         Port map (
-                    clk     => clk_2x,
+                    clk     => i_clk_2x,
                     reset   => reset,
-                    clk_out => clk_3x
+                    clk_out => i_clk_3x
         );
     slowed_clk_4: divide_by_2
         Port map (
-                    clk     => clk_3x,
+                    clk     => i_clk_3x,
                     reset   => reset,
-                    clk_out => clk_4x
+                    clk_out => i_clk_4x
         );
     slowed_clk_5: divide_by_2
         Port map (
-                    clk     => clk_4x,
+                    clk     => i_clk_4x,
                     reset   => reset,
-                    clk_out => clk_5x
+                    clk_out => i_clk_5x
         );
     slowed_clk_6: divide_by_2
         Port map (
-                    clk     => clk_5x,
+                    clk     => i_clk_5x,
                     reset   => reset,
-                    clk_out => clk_6x
+                    clk_out => i_clk_6x
         );
     slowed_clk_7: divide_by_2
         Port map (
-                    clk     => clk_6x,
+                    clk     => i_clk_6x,
                     reset   => reset,
-                    clk_out => clk_7x
+                    clk_out => i_clk_7x
         );
     slowed_clk_8: divide_by_2
         Port map (
-                    clk     => clk_7x,
+                    clk     => i_clk_7x,
                     reset   => reset,
-                    clk_out => clk_8x
+                    clk_out => i_clk_8x
         );
+
+    clk_1x <= i_clk_1x;
+    clk_2x <= i_clk_2x;
+    clk_3x <= i_clk_3x;
+    clk_4x <= i_clk_4x;
+    clk_5x <= i_clk_5x;
+    clk_6x <= i_clk_6x;
+    clk_7x <= i_clk_7x;
+    clk_8x <= i_clk_8x;
+
 end Behavioral;
