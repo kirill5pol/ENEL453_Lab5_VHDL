@@ -31,7 +31,7 @@ architecture Behavioral of vga_module is
         Port (
             clk             : in  STD_LOGIC;
             reset           : in  STD_LOGIC;
-            enable          : in STD_LOGIC;
+            enable          : in  STD_LOGIC;
             kHz             : out STD_LOGIC;      
             seconds_port    : out STD_LOGIC_VECTOR(4-1 downto 0); -- unused
             ten_seconds_port: out STD_LOGIC_VECTOR(3-1 downto 0); -- unused
