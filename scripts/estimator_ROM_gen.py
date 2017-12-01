@@ -13,12 +13,13 @@ bcd_lookup_table = {
     '6': '0110',
     '7': '0111',
     '8': '1000',
-    '9': '1001'
+    '9': '1001',
+    '.': '1100'
 }
 
 
 def num_to_bcd(i, num_digits):
-    str_i = str(i).replace('.', '')
+    str_i = str(i)
     str_i = str_i[0:min(len(str_i), num_digits)]
     for _ in range(num_digits - len(str_i)):
         str_i = '0' + str_i
@@ -37,7 +38,7 @@ def get_ROM_str(key, value, width):
     return rom_str
 
 
-def write_estimator_vhd(filename, values, binary_width=9, num_digits=3):
+def write_estimator_vhd(filename, values, binary_width=9, num_digits=4):
 
     # dictionary, key is that name of the ROM, val is values of ROM. All ROMs are same size
     keys = [key for key in values.iterkeys()]
@@ -112,12 +113,13 @@ def write_estimator_vhd(filename, values, binary_width=9, num_digits=3):
 
 def main(filename='../estimator/estimator.vhd',
          binary_width=9, # Make a rom with 9 bits of accuracy
-         num_digits=3,   # The output bcd will be num_digits*4 bits
+         num_digits=4,   # The output bcd will be num_digits*4 bits
          max_voltage=3.3,# FPGA voltage is 3.3v
          # The actual function we're using
-         distance_func=lambda x:(3.2194*x**4 - 25.53*x**3 + 75.61*x**2 - 102.92*x + 62.383),
+         distance_func=lambda x:(1.2812 * (3.2194*x**4 - 25.53*x**3 + 75.61*x**2 - 102.92*x + 62.383) - 2.2583),
          scales={'dists_cm': 1, 'dists_mm': 10, 'dists_in': 0.3937008} # TODO add Wiffle as measurement: 3.2cm
         ):
+
     # Creates the function to go from voltages to distances
     voltages = np.linspace(0, max_voltage, 2**binary_width) # voltages in volts
     distances = distance_func(voltages) # distances in cm
