@@ -22,7 +22,7 @@ library IEEE;
 
     begin
     -- Internal processes ----------------------------------------------------------
-    select_rom : process(voltage, en_dists_mm, en_dists_cm, en_dists_in)
+    select_rom : process(voltage, en_dists_cm, en_dists_in)
     begin
         if (en_dists_cm = '1') then
             distance <= dists_cm(CONV_INTEGER(UNSIGNED(voltage)));
