@@ -112,6 +112,13 @@ begin
             );
 
 -- LEDs & fun stuff
-    led <= voltage when (en_led = '1') else (others => '0');
+    SHOW_LEDS : process(en_led)
+    begin
+        if (en_led = '1') then
+            led <= voltage;
+        else
+            led <= (others => '0');
+        end if ;
+    end process ; -- SHOW_LEDS
 
 end Behavioral;
