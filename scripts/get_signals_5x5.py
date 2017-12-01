@@ -75,7 +75,7 @@ sig_0, sig_1, sig_1, sig_2, sig_3, sig_4, sig_5, sig_6, sig_7, sig_8, sig_9 = [r
 
 scale = 5 # Scale the image by this size new image will be (scale*5 by scale*5 pixels)
 
-
+rom_str = ''
 for i, sig in enumerate([sig_0, sig_1, sig_2, sig_3, sig_4, sig_5, sig_6, sig_7, sig_8, sig_9]):
     scaled_sig = []
     for row in sig:
@@ -84,13 +84,13 @@ for i, sig in enumerate([sig_0, sig_1, sig_2, sig_3, sig_4, sig_5, sig_6, sig_7,
             current_row += [character for _ in range(scale)]
         scaled_sig += [current_row for _ in range(scale)]
 
-    print('sig_{} = ('.format(i), end='')
+    rom_str += 'sig_{} = ('.format(i), end=''
     for string in scaled_sig:
-        print('("', end='')
+        rom_str += '("', end=''
         for character in string:
             if character == '-':
-                print('0', end='')
+                rom_str += '0', end=''
             else:
-                print('1', end='')
-        print('"), ',end='')
-    print(');')
+                rom_str += '1', end=''
+        rom_str += '"), ',end=''
+    rom_str += ');'
