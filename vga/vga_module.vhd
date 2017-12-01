@@ -5,7 +5,7 @@ entity vga_module is
     Port (
             clk         : in  STD_LOGIC;
             reset       : in  STD_LOGIC;
-            distance_bcd: in  STD_LOGIC_VECTOR(3*4-1 downto 0);
+            distance_bcd: in  STD_LOGIC_VECTOR(4*4-1 downto 0);
             red         : out STD_LOGIC_VECTOR(3 downto 0);
             green       : out STD_LOGIC_VECTOR(3 downto 0);
             blue        : out STD_LOGIC_VECTOR(3 downto 0);
@@ -68,9 +68,7 @@ architecture Behavioral of vga_module is
     -- Box size signals:
     signal inc_box, dec_box: std_logic;
 
-    signal i_digit_tens: STD_LOGIC_VECTOR(3 downto 0);
-    signal i_digit_ones: STD_LOGIC_VECTOR(3 downto 0);
-    signal i_digit_tenths: STD_LOGIC_VECTOR(3 downto 0);
+    signal i_distance_bcd: STD_LOGIC_VECTOR(4*4-1 downto 0);
 
 begin
 -- Module Instantiation --------------------------------------------------------
@@ -102,14 +100,10 @@ begin
     DELAY_DIGITS: process(i_Hz, reset) -- only update the digits once a second on the vga
     begin
         if (reset = '1') then
-            i_digit_tens <= "0000";
-            i_digit_ones <= "0000";
-            i_digit_tenths <= "0000";
+            i_distance_bcd <= (others => '0');
         elsif (rising_edge(i_Hz)) then
         --elsif (rising_edge(i_daHz)) then
-            i_digit_tens <= distance_bcd(11 downto 8);
-            i_digit_ones <= distance_bcd(7 downto 4);
-            i_digit_tenths <= distance_bcd(3 downto 0);
+            i_distance_bcd <= distance_bcd;
         end if;
     end process;
 
@@ -118,9 +112,7 @@ begin
         Port map (
                 clk          => clk,
                 reset        => reset,
-                digit_tens   => i_digit_tens,
-                digit_ones   => i_digit_ones,
-                digit_tenths => i_digit_tenths,
+                distance_bcd => i_distance_bcd;
                 scan_line_x  => scan_line_x,
                 scan_line_y  => scan_line_y,
                 --kHz          => i_kHz,

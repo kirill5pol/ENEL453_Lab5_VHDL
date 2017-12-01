@@ -22,9 +22,7 @@ entity digits_box is
             clk:          in  STD_LOGIC;
             reset:        in  STD_LOGIC;
 
-            digit_tens:   in  STD_LOGIC_VECTOR(3 downto 0); -- Max number is 9 so we need 4 bits
-            digit_ones:   in  STD_LOGIC_VECTOR(3 downto 0); -- Max number is 9 so we need 4 bits
-            digit_tenths: in  STD_LOGIC_VECTOR(3 downto 0); -- Max number is 9 so we need 4 bits
+            distance_bcd: in  STD_LOGIC_VECTOR(4*4-1 downto 0);
 
             scan_line_x:  in  STD_LOGIC_VECTOR(10 downto 0);
             scan_line_y:  in  STD_LOGIC_VECTOR(10 downto 0);
@@ -40,7 +38,7 @@ architecture Behavioral of digits_box is
 -- Internal Signals  -----------------------------------------------------------
     type MAT is array (24 downto 0) of std_logic_vector(24 downto 0);
     constant sig_E: Mat := (("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"));
-    constant sig_D: Mat := (("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"));
+    constant sig_D: Mat := (("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"), ("0000000000111110000000000"));
     constant sig_0: MAT := (("0000011111111111111100000"), ("0000011111111111111100000"), ("0000011111111111111100000"), ("0000011111111111111100000"), ("0000011111111111111100000"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("1111100000000000000011111"), ("0000011111111111111100000"), ("0000011111111111111100000"), ("0000011111111111111100000"), ("0000011111111111111100000"), ("0000011111111111111100000"));
     constant sig_1: MAT := (("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("1111111111111111111111111"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"), ("0000000000000000000000000"));
     constant sig_2: MAT := (("1111100000000001111100000"), ("1111100000000001111100000"), ("1111100000000001111100000"), ("1111100000000001111100000"), ("1111100000000001111100000"), ("1111100000111110000011111"), ("1111100000111110000011111"), ("1111100000111110000011111"), ("1111100000111110000011111"), ("1111100000111110000011111"), ("1111100000111110000011111"), ("1111100000111110000011111"), ("1111100000111110000011111"), ("1111100000111110000011111"), ("1111100000111110000011111"), ("1111111111000000000011111"), ("1111111111000000000011111"), ("1111111111000000000011111"), ("1111111111000000000011111"), ("1111111111000000000011111"), ("1111100000000001111100000"), ("1111100000000001111100000"), ("1111100000000001111100000"), ("1111100000000001111100000"), ("1111100000000001111100000"));
@@ -61,61 +59,61 @@ architecture Behavioral of digits_box is
     signal current_digit_value: STD_LOGIC_VECTOR(3 downto 0); -- Value of the digit you are currently in (or 0s)
     signal output_digit: MAT;
 
-    constant pos_start_x_sig_digit_tens:   STD_LOGIC_VECTOR(9 downto 0) := "0000010000"; -- 16
-    constant pos_start_x_sig_digit_ones:   STD_LOGIC_VECTOR(9 downto 0) := "0000101101"; -- 45
-    constant pos_start_x_sig_decimal:      STD_LOGIC_VECTOR(9 downto 0) := "0001001010"; -- 74
-    constant pos_start_x_sig_digit_tenths: STD_LOGIC_VECTOR(9 downto 0) := "0001100111"; -- 103 --- old: --"0001001010"; -- 74
-    constant pos_end_x_sig_digit_tens:     STD_LOGIC_VECTOR(9 downto 0) := "0000101001"; -- 41
-    constant pos_end_x_sig_digit_ones:     STD_LOGIC_VECTOR(9 downto 0) := "0001000110"; -- 70
-    constant pos_end_x_sig_decimal:        STD_LOGIC_VECTOR(9 downto 0) := "0001100011"; -- 99
-    constant pos_end_x_sig_digit_tenths:   STD_LOGIC_VECTOR(9 downto 0) := "0010000000"; -- 128 --- old: --> --"0001100011"; -- 99
-    constant pos_start_y:                  STD_LOGIC_VECTOR(9 downto 0) := "0000010000"; -- 16 -- All digits share these
-    constant pos_end_y:                    STD_LOGIC_VECTOR(9 downto 0) := "0000101001"; -- 41 -- All digits share these
+    constant pos_start_x_sig_digit_d1:  STD_LOGIC_VECTOR(9 downto 0) := "0000010000"; -- 16
+    constant pos_start_x_sig_digit_d2:  STD_LOGIC_VECTOR(9 downto 0) := "0000101101"; -- 45
+    constant pos_start_x_sig_digit_d3:  STD_LOGIC_VECTOR(9 downto 0) := "0001001010"; -- 74
+    constant pos_start_x_sig_digit_d4:  STD_LOGIC_VECTOR(9 downto 0) := "0001100111"; -- 103
+    constant pos_end_x_sig_digit_d1:    STD_LOGIC_VECTOR(9 downto 0) := "0000101001"; -- 41
+    constant pos_end_x_sig_digit_d2:    STD_LOGIC_VECTOR(9 downto 0) := "0001000110"; -- 70
+    constant pos_end_x_sig_digit_d3:    STD_LOGIC_VECTOR(9 downto 0) := "0001100011"; -- 99
+    constant pos_end_x_sig_digit_d4:    STD_LOGIC_VECTOR(9 downto 0) := "0010000000"; -- 128
+    constant pos_start_y:               STD_LOGIC_VECTOR(9 downto 0) := "0000010000"; -- 16 -- All digits share these
+    constant pos_end_y:                 STD_LOGIC_VECTOR(9 downto 0) := "0000101001"; -- 41 -- All digits share these
 
-    signal currently_sig_digit_tens:    STD_LOGIC := '0';
-    signal currently_sig_digit_ones:    STD_LOGIC := '0';
-    signal currently_sig_digit_tenths:  STD_LOGIC := '0';
-    signal currently_sig_decimal:       STD_LOGIC := '0';
+    signal currently_sig_digit_d1:      STD_LOGIC := '0';
+    signal currently_sig_digit_d2:      STD_LOGIC := '0';
+    signal currently_sig_digit_d4:      STD_LOGIC := '0';
+    signal currently_sig_digit_d3:      STD_LOGIC := '0';
     signal pos_start_x_current_sig:     STD_LOGIC_VECTOR(9 downto 0); -- The pos_start_x_sig for the current digit
-    signal current_sig_x_offset: integer := 0; -- Used for indexing the current sig_digit MAT
-    signal current_sig_y_offset: integer := 0;
+    signal current_sig_x_offset:        integer := 0; -- Used for indexing the current sig_digit MAT
+    signal current_sig_y_offset:        integer := 0;
 
 begin
 
 
 -- Internal processes  ---------------------------------------------------------
     -- Figure out which digit (if any is currently being shown)
-        currently_sig_digit_tens <= '1'
-                when (scan_line_x >= pos_start_x_sig_digit_tens) AND
-                     (scan_line_x <  pos_end_x_sig_digit_tens) AND
+        currently_sig_digit_d1 <= '1'
+                when (scan_line_x >= pos_start_x_sig_digit_d1) AND
+                     (scan_line_x <  pos_end_x_sig_digit_d1) AND
                      (scan_line_y >= pos_start_y) AND
                      (scan_line_y <  pos_end_y) 
                 else '0';
-        currently_sig_digit_ones <= '1'
-                when (scan_line_x >= pos_start_x_sig_digit_ones) AND
-                     (scan_line_x <  pos_end_x_sig_digit_ones) AND
+        currently_sig_digit_d2 <= '1'
+                when (scan_line_x >= pos_start_x_sig_digit_d2) AND
+                     (scan_line_x <  pos_end_x_sig_digit_d2) AND
                      (scan_line_y >= pos_start_y) AND
                      (scan_line_y <  pos_end_y) 
                 else '0';
-        currently_sig_digit_tenths <= '1'
-                when (scan_line_x >= pos_start_x_sig_digit_tenths) AND
-                     (scan_line_x <  pos_end_x_sig_digit_tenths) AND
+        currently_sig_digit_d3 <= '1'
+                when (scan_line_x >= pos_start_x_sig_digit_d3) AND
+                     (scan_line_x <  pos_end_x_sig_digit_d3) AND
                      (scan_line_y >= pos_start_y) AND
                      (scan_line_y <  pos_end_y) 
                 else '0';
-        currently_sig_decimal <= '1'
-                when (scan_line_x >= pos_start_x_sig_decimal) AND
-                     (scan_line_x <  pos_end_x_sig_decimal) AND
+        currently_sig_digit_d4 <= '1'
+                when (scan_line_x >= pos_start_x_sig_digit_d4) AND
+                     (scan_line_x <  pos_end_x_sig_digit_d4) AND
                      (scan_line_y >= pos_start_y) AND
                      (scan_line_y <  pos_end_y) 
                 else '0';
 
     -- Get the x & y offset INSIDE a digit
         -- The starting pos of the digit you are currently in (or 0s if not in digit)
-        pos_start_x_current_sig <=   pos_start_x_sig_digit_tens when (currently_sig_digit_tens = '1') 
-                                else pos_start_x_sig_digit_ones when (currently_sig_digit_ones = '1') 
-                                else pos_start_x_sig_digit_tenths when (currently_sig_digit_tenths = '1')
-                                else pos_start_x_sig_decimal when (currently_sig_decimal = '1') 
+        pos_start_x_current_sig <=   pos_start_x_sig_digit_d1 when (currently_sig_digit_d1 = '1')
+                                else pos_start_x_sig_digit_d2 when (currently_sig_digit_d2 = '1')
+                                else pos_start_x_sig_digit_d3 when (currently_sig_digit_d3 = '1')
+                                else pos_start_x_sig_digit_d4 when (currently_sig_digit_d4 = '1')
                                 else (others => '0');
         -- Determine how many pixels from the start of the current digit the scan lines are
         current_sig_x_offset <= CONV_INTEGER(UNSIGNED(scan_line_x - pos_start_x_current_sig));
@@ -123,10 +121,10 @@ begin
 
     -- Get the values of the current digits
         current_digit_value <=
-                digit_tens when (currently_sig_digit_tens = '1')
-                else digit_ones when (currently_sig_digit_ones = '1')
-                else digit_tenths when (currently_sig_digit_tenths = '1')
-                else "1110" when (currently_sig_decimal = '1')
+                distance_bcd(4*4-1 downto 3*4) when (currently_sig_digit_d1 = '1')
+                else distance_bcd(4*3-1 downto 2*4) when (currently_sig_digit_d2 = '1')
+                else distance_bcd(4*2-1 downto 1*4) when (currently_sig_digit_d3 = '1')
+                else distance_bcd(4*1-1 downto 0*4) when (currently_sig_digit_d4 = '1')
                 else (others => '0');
  
         CURRENT_DIGIT: process(current_digit_value)
@@ -150,10 +148,10 @@ begin
     -- Select the color
         pixel_color <= "111011111111"
                   when  ((output_digit(current_sig_x_offset)(current_sig_y_offset) = '1')) AND 
-                         ((currently_sig_digit_tens = '1') OR
-                         (currently_sig_digit_ones = '1') OR
-                         (currently_sig_digit_tenths = '1') OR
-                         (currently_sig_decimal = '1'))
+                         ((currently_sig_digit_d1 = '1') OR
+                         (currently_sig_digit_d2 = '1') OR
+                         (currently_sig_digit_d4 = '1') OR
+                         (currently_sig_digit_d3 = '1'))
                 else
                          "000000000000"; -- represents background color
 
