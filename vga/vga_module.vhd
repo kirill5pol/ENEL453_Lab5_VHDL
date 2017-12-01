@@ -46,7 +46,7 @@ architecture Behavioral of vga_module is
         Port (
             clk:          in  STD_LOGIC;
             reset:        in  STD_LOGIC;
-            distance_bcd: in  STD_LOGIC_VECTOR(4*4-1 downto 0);
+            bcd_input:    in  STD_LOGIC_VECTOR(4*4-1 downto 0);
             scan_line_x:  in  STD_LOGIC_VECTOR(10 downto 0);
             scan_line_y:  in  STD_LOGIC_VECTOR(10 downto 0);
             --kHz:          in  STD_LOGIC;
@@ -110,7 +110,7 @@ begin
         Port map (
                 clk          => clk,
                 reset        => reset,
-                distance_bcd => i_distance_bcd,
+                bcd_input    => i_distance_bcd,
                 scan_line_x  => scan_line_x,
                 scan_line_y  => scan_line_y,
                 --kHz          => i_kHz,
