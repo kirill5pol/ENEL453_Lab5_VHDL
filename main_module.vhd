@@ -19,7 +19,7 @@ entity main_module is
             -- Comparator signals
             comparator : in  STD_LOGIC; -- If 1: increase voltage, If 0: decrease
 
-            en_led     : in  STD_LOGIC_VECTOR; -- Enable the LEDs
+            en_led     : in  STD_LOGIC; -- Enable the LEDs
             led        : out STD_LOGIC_VECTOR(9-1 downto 0); -- LEDs displaying the current value of the comparator
             pwm_out    : out STD_LOGIC
           );
