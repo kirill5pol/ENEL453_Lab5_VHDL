@@ -9,8 +9,8 @@ set_property PACKAGE_PIN W5 [get_ports clk]
 	create_clock -add -name sys_clk_pin -period 10.00 -waveform {0 5} [get_ports clk]
  
 ## Switches
-#set_property PACKAGE_PIN V17 [get_ports {switches[0]}]					
-#	set_property IOSTANDARD LVCMOS33 [get_ports {switches[0]}]
+set_property PACKAGE_PIN V17 [get_ports ]					
+	set_property IOSTANDARD LVCMOS33 [get_ports ]
 #set_property PACKAGE_PIN V16 [get_ports {switches[1]}]					
 #	set_property IOSTANDARD LVCMOS33 [get_ports {switches[1]}]
 #set_property PACKAGE_PIN W16 [get_ports {switches[2]}]					
@@ -74,8 +74,8 @@ set_property PACKAGE_PIN V13 [get_ports {led[8]}]
 	#set_property IOSTANDARD LVCMOS33 [get_ports {led[13]}]
 #set_property PACKAGE_PIN P1 [get_ports {led[14]}]					
 	#set_property IOSTANDARD LVCMOS33 [get_ports {led[14]}]
-set_property PACKAGE_PIN L1 [get_ports en_led]					
-	set_property IOSTANDARD LVCMOS33 [get_ports en_led]
+#set_property PACKAGE_PIN L1 [get_ports {led[15]}]					
+	#set_property IOSTANDARD LVCMOS33 [get_ports {led[15]}]
 	
 	
 ##7 segment display
