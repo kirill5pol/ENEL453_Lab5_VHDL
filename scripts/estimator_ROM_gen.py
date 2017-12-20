@@ -43,16 +43,16 @@ def write_estimator_vhd(filename, values, binary_width=9, num_digits=4):
     # dictionary, key is that name of the ROM, val is values of ROM. All ROMs are same size
     keys = [key for key in values.iterkeys()]
     #---------------------------------------------------------------------------
-    code_string = 'library IEEE;\n\
-    use IEEE.STD_LOGIC_1164.ALL;\n\
-    use IEEE.STD_LOGIC_ARITH.ALL;\n\
-    use IEEE.STD_LOGIC_UNSIGNED.ALL;\n\
-    \n\
-    entity estimator is\n\
-            generic (width: integer := {});\n\
-            Port (\n\
-                    clk        : in  STD_LOGIC;\n\
-                    reset      : in  STD_LOGIC;\n'.format(binary_width)
+    code_string = '''library IEEE;
+    use IEEE.STD_LOGIC_1164.ALL;
+    use IEEE.STD_LOGIC_ARITH.ALL;
+    use IEEE.STD_LOGIC_UNSIGNED.ALL;
+    
+    entity estimator is
+            generic (width: integer := {});
+            Port (
+                    clk        : in  STD_LOGIC;
+                    reset      : in  STD_LOGIC;\n'''.format(binary_width)
     #---------------------------------------------------------------------------
     # Set which ROM to use as an input
     for key in keys:
@@ -61,12 +61,12 @@ def write_estimator_vhd(filename, values, binary_width=9, num_digits=4):
 
     #---------------------------------------------------------------------------
     # Set the size of distance (several binary coded digits concatenated together)
-    code_string += '                    voltage    : in  STD_LOGIC_VECTOR(width-1 downto 0);\n\
-                    distance   : out STD_LOGIC_VECTOR({}*4-1 downto 0)\n\
-            );\n\
-    end estimator;\n\
-    \n\
-    architecture Behavioral of estimator is\n'.format(num_digits)
+    code_string += '''                    voltage    : in  STD_LOGIC_VECTOR(width-1 downto 0);
+                    distance   : out STD_LOGIC_VECTOR({}*4-1 downto 0)
+            );
+    end estimator;
+    
+    architecture Behavioral of estimator is\n'''.format(num_digits)
     code_string += '    type ROM is array (0 to {}) of STD_LOGIC_VECTOR({}*4-1 downto 0);\n'.format(2**binary_width-1, num_digits)
 
     
@@ -78,33 +78,33 @@ def write_estimator_vhd(filename, values, binary_width=9, num_digits=4):
 
 
     #---------------------------------------------------------------------------
-    code_string += '\n\
-    begin\n\
-    -- Internal processes ----------------------------------------------------------\n\
-    select_rom : process(voltage, '
+    code_string += '''
+    begin
+    -- Internal processes ----------------------------------------------------------
+    select_rom : process(voltage, '''
 
 
     #---------------------------------------------------------------------------
     # Code for selecting which ROM is used
     code_string += ''.join([' en_{},'.format(key) for key in keys])[1:-1] # Remove trailing comma & space
     
-    code_string += ')\n\
-    begin\n\
-        if (en_{} = \'1\') then\n\
-            distance <= {}(CONV_INTEGER(UNSIGNED(voltage)));'.format(keys[0], keys[0])
+    code_string += ''')
+    begin
+        if (en_{} = \'1\') then
+            distance <= {}(CONV_INTEGER(UNSIGNED(voltage)));'''.format(keys[0], keys[0])
 
     for key in keys[1:]:
-        code_string += '\n        elsif (en_{} = \'1\') then\n\
-            distance <= {}(CONV_INTEGER(UNSIGNED(voltage)));'.format(key, key)
+        code_string += '''\n        elsif (en_{} = \'1\') then
+            distance <= {}(CONV_INTEGER(UNSIGNED(voltage)));'''.format(key, key)
 
-    code_string += '\n        else\n\
-            distance <= '
+    code_string += '''\n        else
+            distance <= '''
     code_string += ''.join([' & "1111"' for _ in range(num_digits)])[3:] + ';'
 
-    code_string += '\n        end if;\n\
-    end process ; -- select_rom\n\
-    \nend Behavioral;\n\
-    \n'
+    code_string += '''\n        end if;
+    end process ; -- select_rom
+    \nend Behavioral;
+    '''
     #---------------------------------------------------------------------------
 
     with open(filename, 'w') as f:
